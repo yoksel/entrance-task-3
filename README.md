@@ -25,32 +25,3 @@ npm run dev
 ```
 npm run reset-db
 ```
-
----
-
-* models/index.js: в const sequelize не хватает параметра password (третьего по счёту)
-
-* index.js: опечатка `graphgl` -> `graphql`
-
-* query.js
-    Нет параметра argumets, но есть args:
-    `return models.Event.findAll(argumets, context); -> (args, context);`
-
-    Не передаваютмя параметры (args), вместо них задавется смещение на единицу:
-    `return models.Room.findAll({ offset: 1 }, context); -> (args, context);`
-
-* create-mock-data.js: время начала и конца `🍨 Пробуем kefir.js` переставлены местами
-
-* typeDefs.js: в `UserInput` не хватало обязательного параметра `avatarUrl: String!`
-
-* resolvers/index.js: тип `Event` не работал, потому что его методы не были объявлены в typeDefs.js. Запрос данных о пользователях и переговорке для события были добавлены в:
-  - `query.event`
-  - `query.events`
-  - `mutation.createEvent`
-  - `mutation.updateEvent`
-  - `mutation.removeUserFromEven`
-  - `mutation.changeEventRoom`
-
-* mutation.js:
-  - не было метода `mutation.addUserToEvent`, объявленного в typeDefs.js
-  - `mutation.changeEventRoom` ничего не возвращал
