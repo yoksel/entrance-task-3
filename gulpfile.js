@@ -71,16 +71,9 @@ gulp.task('fonts', () => {
     .pipe(gulp.dest('./public/assets/fonts'));
 });
 
-gulp.task('templates', () => {
-  gulp.src('src/templates/*.html')
-    // no mustache here
-    .pipe(gulp.dest('./public'));
-});
-
 gulp.task('build', function (done) {
   sequence(
     'clean',
-    'templates',
     'style',
     'copy',
     'js',
@@ -111,14 +104,13 @@ gulp.task('start', ['build'], function () {
         const extToTasks = {
           '.js': ['js'],
           '.scss': ['style'],
-          '.svg': ['svg', 'templates'],
-          '.html': ['templates'],
+          '.svg': ['svg'],
           '.jpg': ['images'],
           '.jpeg': ['images'],
           '.png': ['images']
         };
 
-        if (extToTasks[ext].length > 0) {
+        if (extToTasks[ext]) {
           tasks = tasks.concat(tasks, extToTasks[ext]);
         }
       });
