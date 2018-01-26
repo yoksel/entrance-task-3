@@ -9,7 +9,7 @@
     this.elem = elem;
     this.popup = popupEdit;
     this.tmpl = getTemplate(this.popup.elem.innerHTML);
-    this.usersForms = 'участник|участника|участников';
+    this.data = this.collectData();
 
     elem.addEventListener('click', (event) => {
       event.preventDefault();
@@ -24,26 +24,30 @@
     this.fillPopup();
   };
 
-  ShowEventButton.prototype.fillPopup = function () {
+  ShowEventButton.prototype.collectData = function () {
     const eventId = this.elem.dataset.eventId;
     const data = pageData.events[eventId];
     const usersCount = data.users.length - 1;
-    const usersForm = getPlural(usersCount, this.usersForms);
+    const usersForms = 'участник|участника|участников';
+    const usersForm = getPlural(usersCount, usersForms);
     data.url = this.elem.href;
 
     data.users = {
       login: data.users[0].login,
       avatarUrl: data.users[0].avatarUrl,
       avatarSrc: `src="${data.users[0].avatarUrl}`,
+      hasCount: !!usersCount,
       count: `${usersCount} ${usersForm}`
     };
 
+    return data;
+  };
+
+  ShowEventButton.prototype.fillPopup = function () {
     Mustache.parse(this.tmpl);
-    var rendered = Mustache.render(this.tmpl, data);
+    var rendered = Mustache.render(this.tmpl, this.data);
 
     this.popup.elem.innerHTML = rendered;
-
-    console.log(this.popup.elem);
   };
 
   ShowEventButton.prototype.setPopupPosition = function () {

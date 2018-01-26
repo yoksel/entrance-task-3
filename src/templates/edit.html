@@ -26,9 +26,9 @@
             </svg>
           </button>
 
-          <div class="form__group form__group--subject">
-            <label class="form__label" for="subject">Тема</label>
-            <input class="form__input" type="text" name="subject" id="subject" placeholder="О чём будете говорить?" value="{{event.title}}">
+          <div class="form__group form__group--title">
+            <label class="form__label" for="title">Тема</label>
+            <input class="form__input" type="text" name="title" id="title" placeholder="О чём будете говорить?" value="{{event.title}}">
           </div>
 
           <div class="form__group form__group--datetime">
@@ -84,11 +84,7 @@
             {{> select-users}}
           </div>
 
-          <fieldset class="form__group form__group--rooms">
-            <legend class="form__legend">Ваша переговорка</legend>
-
-            {{> select-room}}
-          </fieldset>
+           {{> select-room}}
         </div>
 
 

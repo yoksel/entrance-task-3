@@ -72,28 +72,14 @@ function getPage (req, res) {
 // ------------------------------
 
 function fillData (event) {
+  console.log('fillData in edit');
+
   const itemData = event.dataValues;
   const dateTime = moment(itemData.dateStart);
-  const timeStart = dateTime.format('h:mm');
-  const timeEnd = dateTime.clone().add(30, 'm').format('h:mm');
+  const timeStart = dateTime.format('HH:mm');
+  const timeEnd = moment(itemData.dateEnd).format('HH:mm');
 
   console.log('dateTime', dateTime);
-
-  const dateSrc = {
-    start: itemData.dateStart,
-    end: itemData.dateEnd
-  };
-  const date = {
-    start: tools.parseDate(dateSrc.start),
-    end: tools.parseDate(dateSrc.end)
-  };
-
-  const dateStr = `${date.start.dayNum} ${date.start.monthGen}, ${date.start.year}`;
-
-  const time = {
-    start: `${date.start.hours}:${date.start.prettyMins}`,
-    end: `${date.end.hours}:${date.end.prettyMins}`
-  };
 
   return {
     id: event.id,
@@ -103,6 +89,26 @@ function fillData (event) {
     timeStart: timeStart,
     timeEnd: timeEnd,
     roomId: itemData.RoomId
+  };
+}
+
+// ------------------------------
+
+function fillRooms() {
+
+  console.log('fillRooms');
+  const mods = ['rooms'];
+
+  return {
+    group: {
+      title: 'Ваша переговорка',
+      class: tools.addMods({
+        class: 'form__group',
+        mods: mods
+      })
+    },
+    list: rooms.getRoomsData(data.rooms, data.eventData.roomId),
+    mod: 'select-room--room-selected'
   };
 }
 
@@ -119,10 +125,7 @@ function renderPage () {
       users: data.users.light,
       eventUsers: users.getUsersList(data.event.users),
       eventUserTmpl: partials.eventUserTmpl,
-      rooms: {
-        list: rooms.getRoomsData(data.rooms, data.eventData.roomId),
-        mod: 'select-room--room-selected'
-      },
+      rooms: fillRooms(),
       partials: {
         'symbols': 'components/_symbols',
         'page-header': 'components/_page-header',

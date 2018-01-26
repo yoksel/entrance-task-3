@@ -3,7 +3,7 @@
     <ul class="select-users__list">
       {{#users}}
         <li class="select-users__item" data-searchtitle="{{login}}">
-          <input class="select-users__input select-users__input--checkbox visuallyhidden" type="checkbox" name="users" id="user--{{id}}" value="{{id}}" {{checked}}>
+          <input class="select-users__input select-users__input--checkbox visuallyhidden" type="checkbox" name="usersIds" id="user--{{id}}" value="{{id}}" {{checked}}>
           <label class="select-users__label" for="user--{{id}}" data-id="{{id}}">
             <span class="user">
               <img class="user__pic user__pic--tiny" alt="" src="{{avatarUrl}}">

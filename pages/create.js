@@ -12,7 +12,6 @@ const pageData = {};
 const data = {};
 const partials = {};
 let pageResponse = null;
-let pageReq = null;
 let pageReqBody = null;
 let pageQuery = null;
 
@@ -20,7 +19,6 @@ let pageQuery = null;
 
 function getPage (req, res) {
   pageResponse = res;
-  pageReq = req;
   pageReqBody = req.body;
   pageQuery = req.query;
 
@@ -89,6 +87,30 @@ function fillData () {
 
 // ------------------------------
 
+function fillRooms() {
+
+  console.log('fillRooms');
+  const mods = ['rooms'];
+
+  if (!pageQuery.roomId) {
+    mods.push('hidden');
+  }
+
+  return {
+    group: {
+      title: 'Рекомендованные переговорки',
+      class: tools.addMods({
+        class: 'form__group',
+        mods: mods
+      })
+    },
+    list: rooms.getRoomsData(data.rooms, pageQuery.roomId),
+    mod: 'select-room--room-selected'
+  };
+}
+
+// ------------------------------
+
 function renderPage () {
   pageResponse.render(
     'create',
@@ -99,10 +121,7 @@ function renderPage () {
       popupCalendar: partials.popupCalendar,
       users: data.users.light,
       eventUserTmpl: partials.eventUserTmpl,
-      rooms: {
-        list: rooms.getRoomsData(data.rooms, pageQuery.roomId),
-        mod: 'select-room--room-selected'
-      },
+      rooms: fillRooms(),
       partials: {
         'symbols': 'components/_symbols',
         'page-header': 'components/_page-header',

@@ -83,23 +83,14 @@ function getPage (req, res) {
 // ------------------------------
 
 function handleRequest() {
-  console.log('handleRequest()');
-  // console.log('data.events');
-  // console.log(data.events);
   const matches = tools.findMatches(data.events, pageReqBody);
 
-
-  console.log('matches');
-  console.log(matches);
-
-  // console.log(pageReqBody);
-
-  if (pageReqBody.action == 'create') {
+  if (pageReqBody.action === 'create') {
     // Dont check unique names
     // Check users in other events
     // console.log(matches.byDateUsers);
     if (matches.byDateUsers.length > 0) {
-      const users = getLoginsByIds(matches.byDateUsers);
+      const users = [];//getLoginsByIds(matches.byDateUsers);
 
       actionError = `Событие <b>«${pageReqBody.title}»</b> не было создано, потому что некоторые сотрудники <i>${users.join(', ')}</i> будут в это время на другой встрече`;
 
@@ -114,21 +105,11 @@ function handleRequest() {
       createEvent();
     }
   }
-
-  else if (pageReqBody.action == 'remove' && matches.byId > 0) {
-    console.log('removeEvent');
+  else if (pageReqBody.action === 'remove' && matches.byId > 0) {
     removeEvent();
   }
-
-  //
-  else if (pageReqBody.action == 'update') {
-    if (pageReqBody.save) {
-      updateEvent();
-    }
-
-    else {
-      renderPage();
-    }
+  else if (pageReqBody.action === 'update') {
+    updateEvent();
   }
   // Unhandled action
   else {
@@ -140,27 +121,17 @@ function handleRequest() {
 
 function createEvent() {
   const dateTimeStart = moment(pageReqBody.daycode);
-
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
-  let users = [];
-
-  if (typeof pageReqBody.users === 'string'){
-    users = [pageReqBody.users];
-  }
-  else {
-    pageReqBody.users.map(userId => {
-    return +userId;
-  });
-  }
+  const usersIds = tools.getUsersFromRequest(pageReqBody);
 
   mutation.createEvent(global, {
     input: {
-      title: pageReqBody.subject,
+      title: pageReqBody.title,
       dateStart: dateTimeStart.toISOString(),
       dateEnd: dateTimeEnd.toISOString()
       },
-     usersIds: pageReqBody.users,
+     usersIds: usersIds,
      roomId: pageReqBody.roomId
   })
     .then(
@@ -173,6 +144,35 @@ function createEvent() {
         console.log(error);
       }
     );
+}
+
+// ------------------------------
+
+function updateEvent() {
+  const dateTimeStart = moment(pageReqBody.daycode);
+  const timeTo = pageReqBody.timeTo.split(':');
+  const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
+  const usersIds = tools.getUsersFromRequest(pageReqBody);
+
+  mutation.updateEvent(global, {
+    id: pageReqBody.itemid,
+    input: {
+      title: pageReqBody.title,
+      dateStart: dateTimeStart.toISOString(),
+      dateEnd: dateTimeEnd.toISOString()
+      },
+     usersIds: usersIds,
+     roomId: pageReqBody.roomid
+  })
+    .then(response => {
+      actionMessage = `Событие <b>«${response.dataValues.title}»</b> изменено.`;
+
+      queryEvents();
+    })
+    .catch((e) => {
+      console.log('updateEvent');
+      console.log(e)
+    });
 }
 
 // ------------------------------
@@ -244,11 +244,10 @@ function renderPage () {
 // ------------------------------
 
 function fillShedule() {
-  console.log('\n\nfillShedule()');
+  // console.log('\n\nfillShedule()');
 
   const shedule = {};
   let sheduleList = [];
-  const slotWidth = 20; // px;
 
   tools.daysList.forEach(day => {
     shedule[day.key] = {};
@@ -264,14 +263,11 @@ function fillShedule() {
     const duration = tools.getEventDuration(itemData);
     const durationInSlots = duration / tools.eventsStep;
 
-    // console.log('itemData.start');
-    // console.log(itemData.title, itemData.RoomId);
-    // console.log(moment(itemData.dateStart).format('D MMMM YY h:mm'));
-
     const date = {
       start: tools.parseDate(itemData.dateStart),
       end: tools.parseDate(itemData.dateEnd)
     };
+
     const dayKey = tools.getDayKey(itemData.dateStart);
 
     // Old events
@@ -293,7 +289,7 @@ function fillShedule() {
     const eventSlot = eventsFiltered[0];
 
     if (eventSlot) {
-      const style = `width: ${durationInSlots * slotWidth}px`;
+      const style = `flex-basis: ${durationInSlots * tools.slotWidth}%`;
       eventSlot.event = event;
       eventSlot.eventDuration = duration;
       eventSlot.eventSlots = durationInSlots;
@@ -315,8 +311,6 @@ function fillShedule() {
         // Cut out filled days
         dayRoomShedule.events.splice(foundedIndex + 1, durationInSlots - 1);
       }
-    } else {
-      // console.log('\n\neventSlot[0] not found, may be already filled or it\'s not working hours\n');
     }
   });
 

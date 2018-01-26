@@ -20,6 +20,7 @@
 .slot {
   position: relative;
   flex-grow: 1;
+  flex-shrink: 0;
   display: flex;
 
   @media(min-width: $bp-desktop) {

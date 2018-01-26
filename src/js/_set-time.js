@@ -23,7 +23,7 @@
     const nowHhours = now.getHours();
     let nowMins = now.getMinutes();
     const hoursStart = 8;
-    const hoursEnd = 23;
+    const hoursEnd = 24;
     const workHoursInDay = hoursEnd - hoursStart;
     const hourPosInDay = nowHhours - hoursStart;
 

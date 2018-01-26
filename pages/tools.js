@@ -14,6 +14,7 @@ const todayObj = parseDate(now);
 const daysList = getDaysList();
 const startHour = 8;
 const hoursInDay = 16;
+const slotWidth = 100/(hoursInDay * eventsStepsInHour); // %
 const hours = fillHours();
 
 // ------------------------------
@@ -41,10 +42,10 @@ function parseDate (date) {
     dayNum: newDate.format('D'),
     dayKey: getDayKey(newDate),
     dayCode: newDate.format('DD/MM/YY'),
-    hours: newDate.format('h'),
+    hours: newDate.format('H'),
     mins: newDate.format('mm'),
     dateFormat: newDate.format('D MMMM'),
-    timeFormat: newDate.format('h[:]mm')
+    timeFormat: newDate.format('HH[:]mm')
   };
 }
 
@@ -65,8 +66,8 @@ function prettyDate (event) {
     end: dateTime.end.format('D MMMM'),
   };
   const time = {
-    start: dateTime.start.format('h[:]mm'),
-    end: dateTime.end.format('h[:]mm'),
+    start: dateTime.start.format('HH[:]mm'),
+    end: dateTime.end.format('HH[:]mm'),
   };
 
   if (dayStart === dayEnd) {
@@ -236,6 +237,7 @@ function getEmptyEvents (day, hour, roomId) {
     const dateTimeStr = dateTime.toISOString();
 
     events.push({
+      style: `style="flex-basis: ${slotWidth}%"`,
       hour: hour,
       mins: mins,
       event: {},
@@ -260,21 +262,14 @@ function getEventDuration (itemData) {
 
 // ------------------------------
 
-function getTimeFromRequest (req) {
-  const dateSrc = req.daycode.split('/');
-  const date = dateSrc[0];
-  const month = dateSrc[1] - 1;
-
-  const hours = req.hours;
-  const mins = req.mins;
-  const duration = req.duration * 60 * 1000;
-
-  const eventDateStart = new Date(year, month, date, hours, mins);
-  const eventDateEnd = new Date(eventDateStart.getTime() + duration);
+function getTimeFromRequest (pageReqBody) {
+  const dateTimeStart = moment(pageReqBody.daycode);
+  const timeTo = pageReqBody.timeTo.split(':');
+  const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
 
   return {
-    start: eventDateStart,
-    end: eventDateEnd
+    start: dateTimeStart,
+    end: dateTimeEnd
   };
 }
 
@@ -288,13 +283,16 @@ function findMatches (items, pageReqBody) {
     byDateUsers: []
   };
 
+  const usersIds = getUsersFromRequest(pageReqBody);
+
   if (pageReqBody.action) {
     items.forEach(item => {
       const itemData = item.dataValues;
 
       if (pageReqBody.title && (pageReqBody.title === itemData.title)) {
         matches.byName++;
-      } else if (pageReqBody.login && pageReqBody.login === itemData.login) {
+      }
+      else if (pageReqBody.login && pageReqBody.login === itemData.login) {
         matches.byName++;
       }
 
@@ -303,35 +301,29 @@ function findMatches (items, pageReqBody) {
       }
 
       // Event, need check room & users
-      if (pageReqBody.start) {
+      if (pageReqBody.timeFrom) {
         const itemStartTime = itemData.dateStart;
         const itemEndTime = itemData.dateEnd;
         const time = getTimeFromRequest(pageReqBody);
-        const userIds = itemData.userIds;
+        const users = item.users;
 
         if ((time.start >= itemStartTime && time.start <= itemEndTime) ||
           (time.end >= itemStartTime && time.end <= itemEndTime)) {
-          // console.log('----->> Совпало время');
+          // Same date & time
 
-          if (itemData.RoomId === pageReqBody.roomid) {
-            // console.log('-->> Совпала переговорка');
+          if (itemData.RoomId === +pageReqBody.roomId) {
+            // Same room
             matches.byDateRoom++;
           } else {
-            // console.log('pageReqBody');
-            // console.log(pageReqBody);
+            const eventUsersIds = {};
 
-            const usersAsKeys = {};
-
-            userIds.forEach(item => {
-              usersAsKeys[item] = item;
+            users.forEach(user => {
+              const userId = user.dataValues.id;
+              eventUsersIds[userId] = userId;
             });
 
-            if (typeof pageReqBody.usersids === 'string') {
-              pageReqBody.usersids = [pageReqBody.usersids];
-            }
-
-            const founded = pageReqBody.usersids.filter(item => {
-              if (usersAsKeys[item] !== undefined) {
+            const founded = usersIds.filter(item => {
+              if (eventUsersIds[item] !== undefined) {
                 return item;
               }
             });
@@ -339,7 +331,7 @@ function findMatches (items, pageReqBody) {
             matches.byDateUsers = founded;
 
             if (founded.length > 0) {
-              // console.log('-->> Совпали пользователи');
+              // Same users
             }
           }
         }
@@ -453,52 +445,48 @@ function addMods (params) {
 
 // ------------------------------
 
-function getErrorMarkup (error) {
-  if (!error) {
-    return '';
+function getUsersFromRequest(pageReqBody) {
+  let usersIds = [];
+
+  if (!pageReqBody.usersIds) {
+    return usersIds;
   }
 
-  return `<div class="message message--error">
-    <div class="container">${error}</div>
-  </div>`;
-}
-
-// ------------------------------
-
-function getMessageMarkup (message) {
-  if (!message) {
-    return '';
+  if (typeof pageReqBody.usersIds === 'string'){
+    usersIds = [+pageReqBody.usersIds];
+  }
+  else {
+    pageReqBody.usersIds.map(userId => {
+      return +userId;
+    });
   }
 
-  return `<div class="message">
-    <div class="container">${message}</div>
-  </div>`;
+  return usersIds;
 }
 
 // ------------------------------
 
 module.exports = {
+  addMods: addMods,
   daysList: daysList,
   eventsStep: eventsStep,
   eventsStepsInHour: eventsStepsInHour,
+  findMatches: findMatches,
   getDayKey: getDayKey,
+  getDaysNav: getDaysNav,
   getEmptySheduleForFloor: getEmptySheduleForFloor,
   getEventDuration: getEventDuration,
+  getHoursNav: getHoursNav,
   getMonthes: getMonthes,
   getPopupCalendar: getPopupCalendar,
+  getTimeFromRequest: getTimeFromRequest,
+  getSheduleDays: getSheduleDays,
+  getUsersFromRequest: getUsersFromRequest,
   hoursInDay: hoursInDay,
   prettyDate: prettyDate,
   parseDate: parseDate,
+  slotWidth: slotWidth,
+  sortByFloor: sortByFloor,
   startHour: startHour,
   todayDayKey: getDayKey(now),
-
-  addMods: addMods,
-  findMatches: findMatches,
-  getDaysNav: getDaysNav,
-  getErrorMarkup: getErrorMarkup,
-  getHoursNav: getHoursNav,
-  getMessageMarkup: getMessageMarkup,
-  getSheduleDays: getSheduleDays,
-  getTimeFromRequest: getTimeFromRequest,
-  sortByFloor: sortByFloor
 };

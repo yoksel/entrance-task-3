@@ -41,7 +41,6 @@
     "gulp-sass": "^3.1.0",
     "gulp-svg-symbols": "^3.0.0",
     "gulp-svgo": "^1.2.5",
-    "install": "^0.10.4",
     "moment": "^2.20.1",
     "mustache": "^2.3.0",
     "nodemon": "^1.12.5",
