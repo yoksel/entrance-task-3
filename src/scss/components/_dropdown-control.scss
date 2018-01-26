@@ -1,0 +1,55 @@
+.dropdown-control {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 45px;
+  top: 0;
+  border-radius: $radius;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+
+  @media(min-width: $bp-desktop) {
+    width: 35px;
+  }
+
+  &--arrow {
+    @media(min-width: $bp-desktop) {
+      display: none;
+    }
+  }
+}
+
+.dropdown-control__icon {
+  display: block;
+  width: 12px;
+  height: 12px;
+
+  &--calendar {
+    fill: #AFB4B8;
+
+    .dropdown-control:focus & {
+      fill: #000;
+    }
+  }
+
+  &--arrow {
+    width: 14px;
+    height: 14px;
+    stroke: #000;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    transform: rotate(0);
+    transition: transform .15s;
+
+    .dropdown-control:focus & {
+      opacity: .5;
+    }
+
+    .users-control--opened & {
+      transform: rotate(-180deg);
+    }
+  }
+}

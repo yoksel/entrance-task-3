@@ -1,0 +1,50 @@
+<div class="popup popup--calendar">
+  <div class="popup__content calendar">
+      <div class="calendar__content">
+        <nav class="scroll-nav calendar__scroll-nav" data-target="calendar__month">
+
+          <div class="scroll-nav__content">
+            <ul class="scroll-nav__items">
+              {{#monthes}}
+                <li class="scroll-nav__item">{{month}} &bull; {{year}}</li>
+              {{/monthes}}
+            </ul>
+          </div>
+
+          <button class="scroll-nav__control scroll-nav__control--left scroll-nav__control--inverse scroll-nav__control--tiny" type="button">
+            <svg class="scroll-nav__control-icon">
+              <use xlink:href="#arrow-left"/>
+            </svg>
+          </button>
+          <button class="scroll-nav__control scroll-nav__control--right scroll-nav__control--inverse scroll-nav__control--tiny" type="button">
+            <svg class="scroll-nav__control-icon">
+              <use xlink:href="#arrow-right"/>
+            </svg>
+          </button>
+        </nav>
+
+        <div class="calendar__monthes">
+          {{#monthes}}
+            <div class="{{monthClass}}">
+              <ul class="calendar__list">
+                {{#weekdays}}
+                <li class="calendar__day calendar__day--weekday">
+                  {{.}}
+                </li>
+                {{/weekdays}}
+              </ul>
+              <ul class="calendar__list">
+              {{#days}}
+                <li class="{{dayClass}}" {{{dayStyle}}}>
+                  {{#button}}
+                  <button class="{{.}}" type="button" value="{{dayCode}}">{{day}}</button>
+                  {{/button}}
+                </li>
+              {{/days}}
+              </ul>
+            </div>
+          {{/monthes}}
+        </div>
+      </div>
+  </div>
+</div>

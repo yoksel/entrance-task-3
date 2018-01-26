@@ -1,0 +1,59 @@
+.event {
+  position: relative;
+}
+.event__title {
+  margin-bottom: 8px;
+  padding-right: 30px;
+  line-height: 24px;
+  font-size: 20px;
+  font-weight: 700;
+
+  @media(min-width: $bp-desktop) {
+    margin-bottom: 2px;
+    font-size: 15px;
+  }
+}
+.event__datetime {
+  margin-bottom: 8px;
+  color: $color-garphite;
+
+  @media(min-width: $bp-desktop) {
+    margin-bottom: 14px;
+  }
+}
+
+.event__users-count {
+  vertical-align: middle;
+  color: $color-silver;
+}
+
+.event__edit-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $color-smoke;
+  border: none;
+  border-radius: 50%;
+  fill: $color-lightsilver;
+
+  &:focus {
+    background: #DCDFE1;
+    fill: #000;
+  }
+
+  @media(min-width: $bp-desktop) {
+    top: -8px;
+    right: -8px;
+  }
+}
+
+.event__edit-icon {
+  width: 11px;
+  height: 11px;
+
+}

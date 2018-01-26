@@ -1,0 +1,39 @@
+<div class="shedule">
+  <div class="shedule__floors">
+    {{{rooms}}}
+  </div>
+
+  <div class="shedule__slots slots">
+    {{{hoursNav}}}
+
+    <div class="shedule__days">
+      {{#sheduleDays}}
+        <div id="{{dayKey}}" class="{{class}}">
+          {{#floors}}
+            <div class="shedule__slots-floor" data-dayKey="{{dayKey}}" data-floor="{{floor}}">
+              {{#rooms}}
+                <ul class="slots__list" data-title="{{title}}" data-room-id="{{id}}">
+                  {{#events}}
+                    <li class="slot {{mod}}" {{{style}}}>
+                      <a class="slot__button button {{buttonMod}}" href="{{url}}" {{{data}}}>
+                        <svg class="button__icon">
+                          <use xlink:href="#plus"/>
+                        </svg>
+                      </a>
+                    </li>
+                  {{/events}}
+                </ul>
+              {{/rooms}}
+            </div>
+          {{/floors}}
+        </div>
+      {{/sheduleDays}}
+    </div>
+
+    <div class="current-time">
+      <span class="current-time__value">8:34</span>
+    </div>
+
+    <div class="shedule__grid" style="background: repeating-linear-gradient(to left,currentColor, currentColor 1px, transparent 0, transparent calc(100%/{{hours}}))"></div>
+  </div>
+</div>

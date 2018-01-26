@@ -1,0 +1,62 @@
+INPUT, SELECT, BUTTON {
+  font: inherit;
+
+  &:focus,
+  &:active {
+    outline: 0;
+    box-shadow: 0 0 0 2px $color-royalblue inset;
+  }
+}
+
+::-webkit-input-placeholder {
+  font: inherit;
+  font-weight: 300;
+  letter-spacing: .1px;
+  color: $color-lightsilver;
+}
+::-moz-placeholder {
+  font: inherit;
+  font-weight: 300;
+  letter-spacing: .1px;
+  color: $color-lightsilver;
+}
+:-ms-input-placeholder {
+  font: inherit;
+  font-weight: 300;
+  letter-spacing: .1px;
+  color: $color-lightsilver;
+}
+:-moz-placeholder {
+  font: inherit;
+  font-weight: 300;
+  letter-spacing: .1px;
+  color: $color-lightsilver;
+}
+
+INPUT[type="text"],
+INPUT[type="time"],
+INPUT[type="search"],
+INPUT[type="color"] {
+  border: 1px solid;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid $color-smoke;
+  border-radius: $radius;
+  letter-spacing: -.25px;
+
+  &:focus,
+  &:active {
+    outline: 0;
+    border-color: $color-royalblue;
+    box-shadow: none;
+  }
+
+  @media(min-width: $bp-desktop) {
+    padding: 8px;
+    letter-spacing: .25px;
+  }
+}
+
+BUTTON {
+  cursor: pointer;
+}

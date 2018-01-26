@@ -1,0 +1,36 @@
+.hours-nav {
+  position: relative;
+  z-index: 1;
+  height: 32px;
+  box-sizing: border-box;
+  display: flex;
+  background: #FFF;
+  font-size: 11px;
+  font-weight: 700;
+
+  @media(min-width: $bp-desktop) {
+    height: 46px;
+    border-bottom: 1px solid $color-smoke;
+  }
+}
+
+.hours-nav__items {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+}
+
+.hours-nav__item {
+  min-width: $slot-width;
+  padding: 0;
+  flex-grow: 1;
+  text-align: center;
+
+  &--past {
+    color: $color-silver;
+  }
+}

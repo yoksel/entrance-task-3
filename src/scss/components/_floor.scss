@@ -1,0 +1,26 @@
+.floor {
+  width: 100%;
+  height: 38px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+
+  @media(min-width: $bp-desktop) {
+    height: 30px;
+  }
+}
+
+.floor__title {
+  margin-bottom: 10px;
+  padding-left: 16px;
+  font-weight: normal;
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: $color-silver;
+
+  @media(min-width: $bp-desktop) {
+    padding-left: 25px;
+  }
+}

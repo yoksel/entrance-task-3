@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link rel="stylesheet" type="text/css" href="./assets/css/styles.min.css">
+      <title>Яндекс Переговорки</title>
+  </head>
+  <body class="page page--edit">
+    <div style="display: none">
+      {{> symbols}}
+    </div>
+
+    {{> page-header}}
+
+    <main class="page-main">
+      <form class="form form--create" action="./" method="post">
+        <input type="hidden" name="itemid" value="{{event.id}}">
+        <div class="form__inner">
+          <h1 class="form__title">Редактирование встречи</h1>
+
+          <button class="close-control form__close-control" formaction="/">
+            <svg class="close-control__icon">
+              <use xlink:href="#close"/>
+            </svg>
+          </button>
+
+          <div class="form__group form__group--subject">
+            <label class="form__label" for="subject">Тема</label>
+            <input class="form__input" type="text" name="subject" id="subject" placeholder="О чём будете говорить?" value="{{event.title}}">
+          </div>
+
+          <div class="form__group form__group--datetime">
+            <div class="form__select-date select-date">
+              <label class="form__label" for="date">Дата <span class="form__additional-text">и время</span></label>
+              <div class="form__input-wrapper">
+                <input type="hidden" name="daycode" class="select-date__daycode" value="{{event.dayCode}}">
+                <input class="form__input" type="text" name="date" id="date" value="{{event.date}}">
+                <button class="form__dropdown-control dropdown-control calendar-control" type="button">
+                  <svg class="dropdown-control__icon dropdown-control__icon--calendar">
+                    <use xlink:href="#calendar"/>
+                  </svg>
+                </button>
+              </div>
+
+              {{{popupCalendar}}}
+
+            </div>
+            <div class="form__period">
+              <div class="form__period-item">
+                <label class="form__label" for="date">Начало</label>
+                <input
+                  class="form__input"
+                  type="time"
+                  name="timeFrom"
+                  id="timeFrom"
+                  value="{{event.timeStart}}"
+                  placeholder="--:--"
+                  pattern="[0-9]{2}:[0-9]{2}"
+                  required
+                  >
+              </div>
+              <span class="form__dash">&mdash;</span>
+              <div class="form__period-item">
+                <label class="form__label" for="date">Конец</label>
+                <input
+                  class="form__input"
+                  type="time"
+                  name="timeTo"
+                  id="timeTo"
+                  value="{{event.timeEnd}}"
+                  placeholder="--:--"
+                  pattern="[0-9]{2}:[0-9]{2}"
+                  required
+                  >
+              </div>
+            </div>
+          </div>
+
+          <div class="form__group form__group--users">
+            <label class="form__label" for="users">Участники</label>
+
+            {{> select-users}}
+          </div>
+
+          <fieldset class="form__group form__group--rooms">
+            <legend class="form__legend">Ваша переговорка</legend>
+
+            {{> select-room}}
+          </fieldset>
+        </div>
+
+
+        <footer class="form__footer form__footer--edit">
+          <button
+            class="form__button form__button--cancel button"
+            name="action" value="cancel"
+            >Отмена</button>
+          <div class="form__remove-wrapper">
+            <button
+              class="form__button form__button--remove button"
+              name="action" value="remove"
+              >Удалить встречу</button>
+          </div>
+          <button
+            class="form__button form__button--create button button-create"
+            name="action" value="update"
+            >Сохранить</button>
+        </footer>
+      </form>
+    </main>
+
+    {{> popup--remove-event}}
+
+    <div class="templates" style="display: none">
+      {{{eventUserTmpl}}}
+    </div>
+
+    <script>
+      const pageData = {{{pageData}}};
+    </script>
+    <script src="./assets/js/common.js"></script>
+  </body>
+</html>

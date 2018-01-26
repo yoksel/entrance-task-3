@@ -1,0 +1,28 @@
+<div class="days-nav">
+  <nav class="scroll-nav days-nav__scroll-nav" data-target="shedule__day">
+    <div class="scroll-nav__content">
+      <ul class="scroll-nav__items">
+        {{#days}}
+        <li class="scroll-nav__item">
+          <button class="scroll-nav__button calendar-control">
+            {{dateShort}} &bull; {{weekday}}
+          </button>
+        </li>
+        {{/days}}
+      </ul>
+    </div>
+
+    <button class="scroll-nav__control scroll-nav__control--left">
+      <svg class="scroll-nav__control-icon">
+        <use xlink:href="#arrow-left"/>
+      </svg>
+    </button>
+    <button class="scroll-nav__control scroll-nav__control--right">
+      <svg class="scroll-nav__control-icon">
+        <use xlink:href="#arrow-right"/>
+      </svg>
+    </button>
+  </nav>
+
+  {{{popupCalendar}}}
+</div>

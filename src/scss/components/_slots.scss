@@ -1,0 +1,53 @@
+.slots {
+  position: relative;
+}
+
+.slots__list {
+  position: relative;
+  height: $slot-height;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  list-style: none;
+  border-bottom: 2px solid $color-lightsmoke;
+  box-sizing: border-box;
+
+  @media(min-width: $bp-desktop) {
+    height: $slot-height-desktop;
+  }
+}
+
+.slot {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+
+  @media(min-width: $bp-desktop) {
+    align-items: flex-start;
+  }
+}
+
+.slot__button {
+  padding: 0;
+  background: #FFF;
+  border-radius: 2px;
+
+  flex-grow: 1;
+  border: none;
+
+  .slot--has-event & {
+    background: $color-darksmoke;
+
+    &:hover {
+      background: $color-lightsilver;
+    }
+
+    &:focus {
+      background: #8294A4;
+    }
+  }
+
+  @media(min-width: $bp-desktop) {
+    height: 28px;
+  }
+}

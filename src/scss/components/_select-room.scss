@@ -1,0 +1,76 @@
+.select-room {}
+
+.select-room__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.select-room__item {
+  position: relative;
+  margin-bottom: 8px;
+  flex-grow: 1;
+
+  .select-room--room-selected & {
+    margin-bottom: 0;
+  }
+}
+
+.select-room__label {
+  display: block;
+  padding: 13px 12px;
+  background: $color-smoke;
+  border-radius: $radius;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 1.2;
+  cursor: pointer;
+
+  @media(min-width: $bp-desktop) {
+    font-size: 13px;
+    padding: 12px;
+  }
+}
+
+.select-room__input:checked + .select-room__label {
+  background: $color-royalblue;
+  color: #FFF;
+}
+
+.select-room--room-selected .select-room__input:not(:checked) + .select-room__label {
+    display: none;
+}
+
+
+.select-room__time {
+  display: inline-block;
+  margin-right: 6px;
+  font-weight: bold;
+
+  @media(min-width: $bp-desktop) {
+    margin-right: 14px;
+  }
+}
+
+.select-room__close-control {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+  width: 1em;
+  height: 1em;
+  margin: auto;
+  background: none;
+
+  .close-control__icon {
+    fill: #FFF;
+  }
+
+  .select-room__input:checked ~ & {
+    display: flex;
+  }
+}
+
+

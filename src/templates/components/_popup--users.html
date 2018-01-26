@@ -1,0 +1,17 @@
+<div class="popup popup--users">
+  <div class="popup__content">
+    <ul class="select-users__list">
+      {{#users}}
+        <li class="select-users__item" data-searchtitle="{{login}}">
+          <input class="select-users__input select-users__input--checkbox visuallyhidden" type="checkbox" name="users" id="user--{{id}}" value="{{id}}" {{checked}}>
+          <label class="select-users__label" for="user--{{id}}" data-id="{{id}}">
+            <span class="user">
+              <img class="user__pic user__pic--tiny" alt="" src="{{avatarUrl}}">
+              {{login}} <span class="user__floor">{{homeFloor}} этаж</span>
+            </span>
+          </label>
+        </li>
+      {{/users}}
+    </ul>
+  </div>
+</div>

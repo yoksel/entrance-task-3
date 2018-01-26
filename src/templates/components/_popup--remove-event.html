@@ -1,0 +1,19 @@
+<div class="popup-fader">
+  <div class="popup popup--remove-event">
+    <div class="popup__content">
+      <h5 class="popup__title">
+        Встреча будет<br/>
+        удалена безвозвратно
+      </h5>
+
+      <form action="./" method="post">
+        <input type="hidden" name="itemid" value="{{event.id}}">
+        <div class="popup__buttons">
+          <button class="popup__button popup__button--cancel button" type="button">Отмена</button>
+
+          <button class="popup__button popup__button--remove button" name="action" value="remove">Удалить</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

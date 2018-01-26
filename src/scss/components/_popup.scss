@@ -1,0 +1,180 @@
+.popup-fader {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding-bottom: 24px;
+  justify-content: center;
+  align-items: flex-end;
+  background: rgba(0,16,33,0.40);
+
+  .page--popup-opened & {
+    display: flex;
+  }
+
+  .popup {
+    display: block;
+    position: static;
+  }
+
+  .popup__content {
+    padding: 32px;
+  }
+
+  @media(min-width: $bp-tablet) {
+    align-items: center;
+    padding-bottom: 0;
+  }
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-width: 320px;
+  max-width: 400px;
+
+  flex-direction: column;
+
+  @media(min-width: $bp-desktop) {
+    min-width: 340px;
+    width: auto;
+  }
+}
+
+.popup--opened {
+  display: flex;
+}
+
+.popup--calendar {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+
+  @media(min-width: $bp-desktop) {
+    min-width: 300px;
+
+    .select-date & {
+      margin-left: -30px;
+    }
+  }
+}
+
+.popup--users {
+  /*display: block;*/
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.popup--remove-event {
+  width: 100%;
+  max-width: 450px;
+
+  .popup__title {
+    padding-top: 56px;
+    background: url("../img/girl-no.png") 50% 0 no-repeat;
+  }
+}
+
+.popup--event-created {
+  width: 100%;
+  max-width: 450px;
+
+  .popup__title {
+    padding-top: 56px;
+    background: url("../img/boom.png") 50% 0 no-repeat;
+  }
+}
+
+.popup__title {
+  margin: 0;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: bold;
+  letter-spacing: -.2px;
+}
+
+.popup__text {
+  margin: 0;
+  margin-top: 8px;
+  text-align: center;
+  font-size: 15px;
+}
+
+.popup__arrow {
+  position: relative;
+  height: 8px;
+  width: 32px;
+  margin: auto;
+  left: auto;
+  right: auto;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  &::before {
+    content: "";
+    position: relative;
+    display: block;
+    width: 12px;
+    height: 12px;
+    background: #FFFFFF;
+    border-radius: 3px;
+    box-shadow: 0 1px 16px rgba(0,44,92,0.28);
+    transform: rotate(45deg);
+    top: 40%;
+  }
+
+  .popup--rotated & {
+    order: 1;
+    align-items: flex-end;
+
+    &::before {
+      top: auto;
+      bottom: 40%;
+    }
+  }
+}
+
+.popup__content {
+  flex-basis: 100%;
+  padding: 16px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 1px 16px 0 rgba(0,44,92,0.28);
+
+  .popup--users & {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-radius: $radius;
+    box-shadow: 0 1px 8px 0 rgba(0,44,92,0.28);
+  }
+
+  @media(min-width: $bp-desktop) {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+}
+
+.popup__buttons {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.popup__button {
+  margin: 0 8px;
+}

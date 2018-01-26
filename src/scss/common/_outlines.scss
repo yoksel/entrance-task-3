@@ -1,0 +1,58 @@
+HTML {
+
+    background-image: url("/touch-images/2-%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F-%D1%81%D0%BA%D1%80%D0%BE%D0%BB%D0%BB.png");
+    background-size: 360px auto;
+    background-repeat: no-repeat;
+    background-position: center top;
+
+
+    @media(min-width: $bp-desktop) {
+      background-image: url(/desktop-images/1-%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F.png);
+      background-size: auto auto;
+    }
+  }
+
+
+.root--create {
+  background-image: url("/touch-images/5-%D0%BD%D0%BE%D0%B2%D0%B0%D1%8F-%D0%B2%D1%81%D1%82%D1%80%D0%B5%D1%87%D0%B0.png");
+
+  @media(min-width: $bp-desktop) {
+
+    background-image: url("/desktop-images/3-%D0%BD%D0%BE%D0%B2%D0%B0%D1%8F-%D0%B2%D1%81%D1%82%D1%80%D0%B5%D1%87%D0%B0.png");
+    background-size: auto auto;
+  }
+}
+
+.root--edit {
+  background-image: url("/touch-images/6-%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D0%B2%D1%81%D1%82%D1%80%D0%B5%D1%87%D0%B8.png");
+
+  @media(min-width: $bp-desktop) {
+
+    background-image: url("/desktop-images/5-%D1%80%D0%B5%D0%B4%D0%B0%D0%BA%D1%82%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5-%D0%B2%D1%81%D1%82%D1%80%D0%B5%D1%87%D0%B8.png");
+    background-size: auto auto;
+  }
+}
+
+/*BODY {
+  opacity: .5;
+}*/
+
+/*BODY > * {
+  outline: 1px solid red
+}
+
+BODY > * > * {
+  outline: 1px solid green
+}
+
+BODY > * > * > * {
+  outline: 1px solid orange
+}
+
+BODY > * > * > * > * {
+  outline: 1px solid blue
+}
+
+BODY > * > * > * > * > *{
+  outline: 1px solid crimson;
+}*/

@@ -1,0 +1,48 @@
+BODY {
+  min-width: 320px;
+  padding: 0;
+  margin: 0;
+  background: #FFF;
+  font: 15px/1.4 Open Sans, Arial, sans-serif;
+  color: #000;
+
+  @media(min-width: $bp-tablet) {
+    font-size: 14px;
+  }
+  @media(min-width: $bp-desktop) {
+    font-size: 13px;
+  }
+}
+
+.page {
+  &--create,
+  &--edit {
+    position: relative;
+
+    @media(min-width: $bp-tablet) {
+      padding-bottom: 100px;
+    }
+  }
+}
+
+svg {
+  width: 16px;
+  height: 16px;
+}
+
+H1, H2, H3, H4 {
+  margin: 0;
+}
+
+.visuallyhidden {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}

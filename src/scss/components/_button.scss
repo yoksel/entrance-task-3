@@ -1,0 +1,61 @@
+.button {
+  padding: 12px 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $color-smoke;
+  border: none;
+  border-radius: $radius;
+  line-height: 1;
+  text-decoration: none;
+  font-weight: 600;
+  color: #000;
+
+  &:focus,
+  &:active {
+    background: #DDE0E4;
+  }
+
+  &:disabled {
+    color: rgba(0,0,0,0.2);
+  }
+
+  @media(min-width: $bp-desktop) {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+
+.button--blue {
+  background: $color-royalblue;
+  color: #FFF;
+
+  &:hover {
+    background: $color-midroyalblue;
+  }
+
+  &:focus,
+  &:active {
+    background: $color-darkroyalblue;
+  }
+
+  &:disabled {
+    background: $color-smoke;
+    color: rgba(0,0,0,0.2);
+  }
+}
+
+.button__icon {
+  width: 12px;
+  height: 12px;
+  opacity: 0;
+  fill: currentColor;
+
+  .button--blue:hover &,
+  .button--blue:focus &,
+  .button--blue:active & {
+      opacity: 1;
+    }
+}
+

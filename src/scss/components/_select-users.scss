@@ -1,0 +1,144 @@
+.select-users {}
+
+.select-users__input-wrapper {
+  position: relative;
+}
+
+.select-users__input {
+  width: 100%;
+}
+
+.select-users__popup-control {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 45px;
+  top: 0;
+  border-radius: $radius;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+
+  @media(min-width: $bp-desktop) {
+    width: 35px;
+  }
+}
+
+.select-users__icon {
+  display: block;
+  width: 12px;
+  height: 12px;
+
+  &--arrow {
+    width: 14px;
+    height: 14px;
+    stroke: #000;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    transform: rotate(0);
+    transition: transform .15s;
+
+    .select-users__popup-control:focus & {
+      opacity: .5;
+    }
+    .users-control--opened & {
+      transform: rotate(-180deg);
+    }
+
+    @media(min-width: $bp-desktop) {
+      display: none;
+    }
+  }
+}
+
+.select-users__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.select-users__label {
+  display: flex;
+  min-height: 32px;
+  margin-left: -16px;
+  margin-right: -16px;
+  margin-bottom: 1px;
+  padding: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-weight: normal;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .15s;
+
+  &:hover {
+    background: $color-darksmoke;
+  }
+}
+
+.select-users__input:focus + .select-users__label {
+  box-shadow: 0 0 0 2px $color-royalblue inset;
+}
+
+.select-users__input:checked + .select-users__label {
+  background: #F6F7F9;
+  font-weight: bold;
+}
+
+.select-users__results {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 3px;
+}
+
+.select-users__result {
+  position: relative;
+  height: 24px;
+  margin-top: 8px;
+  margin-right: 12px;
+  padding: 0;
+  display: flex;
+  background: $color-smoke;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+
+  /* glass */
+  &::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  &:hover {
+    .close-control__icon {
+      fill: #000
+    }
+  }
+
+  &:focus,
+  &:active {
+    box-shadow: none;
+  }
+
+  .user {
+    margin-right: 7px;
+  }
+}
+
+.select-users__placeholder {
+  display: none;
+  padding: 10px;
+  font-size: 12px;
+  color: $color-silver;
+
+  .select-users__results--empty & {
+    display: block;
+  }
+}

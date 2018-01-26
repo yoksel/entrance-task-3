@@ -1,0 +1,61 @@
+{
+  "name": "shri-2018",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "semistandard",
+    "fix": "semistandard --fix",
+    "reset-db": "rm -f ./db.sqlite3 && node create-mock-data.js",
+    "dev": "nodemon index.js",
+    "start": "gulp start"
+  },
+  "dependencies": {
+    "express": "^4.15.4",
+    "express-graphql": "^0.6.11",
+    "graphql": "^0.11.1",
+    "graphql-date": "^1.0.3",
+    "graphql-tools": "^1.2.1",
+    "sequelize": "^4.7.5",
+    "sqlite3": "^3.1.9"
+  },
+  "devDependencies": {
+    "autoprefixer": "^7.2.4",
+    "consolidate": "^0.15.0",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-csso": "^3.0.1",
+    "gulp-eslint": "^4.0.1",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-plumber": "^1.2.0",
+    "gulp-postcss": "^7.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-rimraf": "^0.2.2",
+    "gulp-sass": "^3.1.0",
+    "gulp-svg-symbols": "^3.0.0",
+    "gulp-svgo": "^1.2.5",
+    "install": "^0.10.4",
+    "moment": "^2.20.1",
+    "mustache": "^2.3.0",
+    "nodemon": "^1.12.5",
+    "npm": "^5.6.0",
+    "path": "^0.12.7",
+    "postcss": "^6.0.16",
+    "run-sequence": "^2.2.1",
+    "semistandard": "^11.0.0"
+  },
+  "browserslist": [
+    "last 1 version",
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Opera versions",
+    "last 2 Edge versions"
+  ]
+}

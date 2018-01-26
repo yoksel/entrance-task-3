@@ -1,0 +1,115 @@
+.scroll-nav {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  @media(min-width: $bp-desktop) {
+  }
+}
+
+.scroll-nav__content {
+  overflow: hidden;
+  margin: 0 14px;
+
+  @media(min-width: $bp-desktop) {
+    margin: 0 10px;
+    font-size: 14px;
+  }
+}
+
+.scroll-nav__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  transform: translateX(0);
+  transition: transform .25s;
+}
+
+.scroll-nav__item {
+  padding: 0;
+  border: none;
+  background: none;
+  flex-basis: 100%;
+  flex-shrink: 0;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.scroll-nav__button {
+  width: 100%;
+  border: none;
+  padding: 3px 0;
+  background: transparent;
+  border-radius: $radius;
+  font-size: 15px;
+}
+
+.scroll-nav__control {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $color-smoke;
+  border: none;
+  border-radius: 50%;
+
+  &:disabled {
+    opacity: .25;
+    pointer-events: none;
+  }
+
+  &:focus {
+    background: $color-darksmoke;
+  }
+
+  &--inverse {
+    background: $color-silver;
+
+    &:focus {
+      background: $color-lightsilver;
+    }
+  }
+
+  &--tiny {
+    width: 24px;
+    height: 24px;
+    background: $color-silver;
+  }
+
+  @media(min-width: $bp-desktop) {
+    width: 24px;
+    height: 24px;
+  }
+}
+.scroll-nav__control--left {
+  order: -1;
+}
+
+.scroll-nav__control-icon {
+  width: 9px;
+  height: 16px;
+  stroke: currentColor;
+  stroke-opacity: .4;
+
+  .scroll-nav__control--left & {
+    margin-right: 4px;
+  }
+  .scroll-nav__control--right & {
+    margin-left: 3px;
+  }
+
+  .scroll-nav__control--inverse & {
+    width: 7px;
+    height: 12px;
+    color: #FFF;
+    stroke-opacity: 0.6;
+  }
+}

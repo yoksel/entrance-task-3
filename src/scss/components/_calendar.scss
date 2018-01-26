@@ -1,0 +1,116 @@
+.calendar {
+  left: 0;
+  right: 0;
+  border-radius: 0 0 4px 4px;
+
+  @media(min-width: $bp-desktop) {
+    border-radius: 4px;
+  }
+}
+
+.calendar__content {
+  padding: 16px 16px 10px;
+  background: $color-smoke;
+  border-radius: 4px;
+}
+
+.calendar__scroll-nav {
+  max-width: 230px;
+  padding: 0 16px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.calendar__monthes {
+  margin-top: 20px;
+
+  @media(min-width: $bp-desktop) {
+    margin-top: 16px;
+  }
+}
+
+.calendar__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.calendar__month {
+  display: none;
+
+  &--current {
+    display: block;
+  }
+}
+
+.calendar__day {
+  flex-basis: 14%;
+  text-align: center;
+
+  &:nth-child(7n),
+  &:nth-child(7n + 6) {
+    color: red;
+  }
+
+  &--weekday {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 600;
+
+    @media(min-width: $bp-desktop) {
+      font-size: 12px;
+    }
+  }
+}
+
+.calendar__button {
+  width: 100%;
+  height: 2.5em;
+  padding: 0 10px;
+  box-sizing: border-box;
+  border: 0;
+  border-radius: $radius;
+  background: transparent;
+  text-align: center;
+  line-height: 1;
+  font-size: 14px;
+  color: inherit;
+
+  @media(min-width: $bp-desktop) {
+    height: 2.3em;
+    padding: 0 5px;
+    font-size: 13px;
+  }
+
+  &:hover {
+    box-shadow: inset 0 0 0 1px solid $color-silver;
+  }
+
+  &--selected {
+    box-shadow: inset 0 0 0 1px $color-silver;
+
+    &:focus,
+    &:hover {
+      box-shadow: inset 0 0 0 1px $color-darkgray;
+    }
+  }
+
+  &--past {
+    opacity: .25;
+    pointer-events: none;
+  }
+
+  &--today {
+    background: $color-silver;
+    color: #FFF;
+
+    &:focus,
+    &:hover {
+      border: none;
+      background: $color-lightsilver;
+      color: #000;
+    }
+  }
+}

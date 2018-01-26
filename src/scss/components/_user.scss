@@ -1,0 +1,25 @@
+.user {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.user__pic {
+  width: 32px;
+  height: auto;
+  margin-right: 8px;
+  border-radius: 50%;
+
+  &--tiny {
+    width: 24px;
+  }
+
+  @media(min-width: $bp-desktop) {
+    width: 24px;
+  }
+}
+
+.user__floor {
+  margin-left: 8px;
+  color: $color-silver;
+}

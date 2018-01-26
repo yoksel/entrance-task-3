@@ -1,0 +1,19 @@
+.close-control {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $color-smoke;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.close-control__icon {
+  width: 9px;
+  height: 9px;
+  fill: #AFB4B8;
+  pointer-events: none;
+}
