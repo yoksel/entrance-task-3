@@ -19,20 +19,13 @@ gulp.task('clean', function (done) {
   rimraf('./public', done);
 });
 
-gulp.task('copy', function () {
+gulp.task('js', () => {
   gulp.src([
     'node_modules/mustache/mustache.min.js',
-    'node_modules/moment/moment.js'
-    ])
-      .pipe(gulp.dest('src/js/'));
-  gulp.src([
-    'node_modules/moment/locale/ru.js'
-    ])
-      .pipe(gulp.dest('src/js/locale'));
-});
-
-gulp.task('js', () => {
-  gulp.src('src/**/*.js')
+    'node_modules/moment/moment.js',
+    'node_modules/moment/locale/ru.js',
+    'src/**/*.js'
+  ])
     .pipe(concat('common.js'))
     .pipe(gulp.dest('./public/assets/js'));
 });
@@ -75,7 +68,6 @@ gulp.task('build', function (done) {
   sequence(
     'clean',
     'style',
-    'copy',
     'js',
     'svg',
     'images',
