@@ -11,8 +11,8 @@
   const form = document.querySelector('.form--event');
   const dayCode = form.querySelector('.select-datetime__daycode');
   const dateTimeInput = form.querySelector('.select-datetime__input');
-  const timeFromInput = form.querySelector('.select-datetime__timefrom');
-  const timeToInput = form.querySelector('.select-datetime__timeto');
+  const timeFromInput = form.querySelector('.select-datetime__time--from');
+  const timeToInput = form.querySelector('.select-datetime__time--to');
   const defaultRoom = form.querySelector('.select-room__default');
   const eventIdElem = form.querySelector('.form__itemid');
 
@@ -62,7 +62,7 @@
     const dayKey = dateStart.locale('en').format('D-MMM');
     const floors = db.shedule[dayKey].floors;
     const floorsList = Object.values(floors);
-    const eventId = eventIdElem.value;
+    const eventId = eventIdElem ? eventIdElem.value : null;
     let foundedUsers = [];
 
     const membersList = members.map(member => {

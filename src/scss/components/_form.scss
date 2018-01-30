@@ -163,6 +163,11 @@ $form-maxwidth-tablet: 600px;
       display: block;
     }
   }
+
+  &--not-valid .form__input,
+  &--not-valid .form__input:focus {
+    border-color: orangered;
+  }
 }
 
 .form__period-item {

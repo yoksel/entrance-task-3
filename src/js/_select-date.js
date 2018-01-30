@@ -11,8 +11,9 @@
     const buttons = elem.querySelectorAll('.calendar__button');
     this.input = elem.querySelector('.select-datetime__input');
     this.dayCodeInput = elem.querySelector('.select-datetime__daycode');
-    this.timeFromInput = elem.querySelector('.select-datetime__timefrom');
-    this.timeToInput = elem.querySelector('.select-datetime__timeto');
+    this.period = elem.querySelector('.form__period');
+    this.timeFromInput = elem.querySelector('.select-datetime__time--from');
+    this.timeToInput = elem.querySelector('.select-datetime__time--to');
     this.calendarPopup = elem.querySelector('.popup--calendar');
 
     buttons.forEach(button => {
@@ -22,14 +23,14 @@
     });
 
     this.timeFromInput.addEventListener('input', () => {
-      const date = moment(this.dayCodeInput.value);
-      const timeSet = this.timeFromInput.value.split(':');
-      const newDate = date.hour(+timeSet[0]).minute(+timeSet[1]);
-      this.dayCodeInput.value = newDate;
+      const newDate = this.getDateFromTime(this.timeFromInput.value);
+      this.dayCodeInput.value = newDate.toISOString();
+
+      this.validateTime();
     });
 
     this.timeToInput.addEventListener('input', () => {
-      console.log(this.timeToInput.value);
+      this.validateTime();
     });
 
     this.input.addEventListener('click', (event) => {
@@ -37,6 +38,14 @@
       this.input.classList.toggle('form__input--calendar-opened');
     });
   };
+
+  SelectDate.prototype.getDateFromTime = function(timeInputValue) {
+    const date = moment(this.dayCodeInput.value);
+    const timeSet = timeInputValue.split(':');
+    const newDate = date.hour(+timeSet[0]).minute(+timeSet[1]);
+
+    return newDate;
+  }
 
   SelectDate.prototype.setDate = function (date) {
     moment.locale('ru');
@@ -46,10 +55,27 @@
     closePopups();
   };
 
+  SelectDate.prototype.validateTime = function(){
+    console.log('validateTime');
+    const timeFrom = this.getDateFromTime(this.timeFromInput.value).toISOString();
+    const timeTo = this.getDateFromTime(this.timeToInput.value).toISOString();
+
+    console.log(timeFrom, timeTo);
+
+
+console.log('this.period', this.period);
+    if(timeFrom > timeTo) {
+      this.period.classList.add('form__period--not-valid');
+    }
+    else {
+      this.period.classList.remove('form__period--not-valid');
+    }
+    console.log('---------------');
+  }
+
   SelectDate.prototype.openPopup = function (event) {
     event.stopPropagation();
     closePopups(this.calendarPopup);
-    console.log(this.calendarPopup);
     this.calendarPopup.classList.toggle('popup--opened');
   };
 
