@@ -220,19 +220,14 @@ function findMatches (items, pageReqBody) {
   const matches = {
     byId: 0,
     byName: 0,
-    byDateRoom: 0,
-    byDateUsers: []
+    byDateRoom: 0
   };
-
-  const usersIds = getUsersFromRequest(pageReqBody);
 
   if (pageReqBody.action) {
     items.forEach(item => {
       const itemData = item.dataValues;
 
-      if (pageReqBody.title && (pageReqBody.title === itemData.title)) {
-        matches.byName++;
-      } else if (pageReqBody.login && pageReqBody.login === itemData.login) {
+      if (pageReqBody.login && pageReqBody.login === itemData.login) {
         matches.byName++;
       }
 
@@ -240,12 +235,11 @@ function findMatches (items, pageReqBody) {
         matches.byId++;
       }
 
-      // Event, need check room & users
+      // Event, need check room
       if (pageReqBody.timeFrom) {
         const itemStartTime = itemData.dateStart;
         const itemEndTime = itemData.dateEnd;
         const time = getTimeFromRequest(pageReqBody);
-        const users = item.users;
 
         if ((time.start >= itemStartTime && time.start <= itemEndTime) ||
           (time.end >= itemStartTime && time.end <= itemEndTime)) {
@@ -254,25 +248,6 @@ function findMatches (items, pageReqBody) {
           if (itemData.RoomId === +pageReqBody.roomId) {
             // Same room
             matches.byDateRoom++;
-          } else {
-            const eventUsersIds = {};
-
-            users.forEach(user => {
-              const userId = user.dataValues.id;
-              eventUsersIds[userId] = userId;
-            });
-
-            const founded = usersIds.filter(item => {
-              if (eventUsersIds[item] !== undefined) {
-                return item;
-              }
-            });
-
-            matches.byDateUsers = founded;
-
-            if (founded.length > 0) {
-              // Same users
-            }
           }
         }
       }

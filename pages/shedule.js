@@ -125,9 +125,6 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
           room.slots.push(emptySlot);
         }
       });
-
-      // console.log('\n\nROOM.SLOTS');
-      // console.log(room.slots.length);
     }
   }
 
@@ -156,6 +153,7 @@ function fillItems(params) {
     hours: endDateTime.format('H'),
     mins: endDateTime.format('mm')
   };
+
   if (+endTime.hours === 0) {
     endTime.hours = 24;
   }
@@ -259,6 +257,42 @@ function sheduleToList (shedule) {
 
 // ------------------------------
 
+function sheduleToSlotsList (shedule) {
+  const sheduleList = [];
+
+  for (let dayKey in shedule) {
+    const day = shedule[dayKey];
+    const floors = [];
+    const dayClass = tools.addMods({
+      class: 'shedule__day',
+      mods: [dayKey],
+      isCurrent: dayKey === tools.todayDayKey
+    });
+
+    for (let floorNum in day.floors) {
+      const floor = day.floors[floorNum];
+      const roomsList = Object.keys(floor.rooms).map(num => {
+        return floor.rooms[num];
+      });
+
+      floors.push({
+        floor: floorNum,
+        rooms: roomsList
+      });
+    }
+
+    sheduleList.push({
+      dayKey: dayKey,
+      floors: floors,
+      class: dayClass
+    });
+  }
+
+  return sheduleList;
+}
+
+// ------------------------------
+
 function getSheduleList(events, floors) {
   const shedule = getShedule (events, floors);
 
@@ -267,7 +301,16 @@ function getSheduleList(events, floors) {
 
 // ------------------------------
 
+function getSlotsList(events, floors) {
+  const shedule = getShedule (events, floors);
+
+  return sheduleToSlotsList(shedule);
+}
+
+// ------------------------------
+
 module.exports = {
   getSheduleList: getSheduleList,
+  getSlotsList: getSlotsList,
   getShedule: getShedule
 };

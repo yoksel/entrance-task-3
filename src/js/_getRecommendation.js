@@ -130,10 +130,7 @@
 
     const checkedUsers = checkUsers(data.date, data.members, data.db);
 
-    if (checkedUsers.length > 0) {
-      // checkedUsers
-      selectUser.highlightUsers(checkedUsers);
-    }
+    selectUser.highlightUsers(checkedUsers);
 
     console.log('---------------------');
   }

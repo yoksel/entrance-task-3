@@ -49,6 +49,11 @@ function getPage (req, res) {
           floors: data.floors,
           isHasItems: false
         });
+        data.sheduleTest = shedule.getSlotsList({
+          events: data.events,
+          floors: data.floors,
+          isHasItems: false
+        });
         data.users = response[2];
 
         return Promise.all(partialsProms);

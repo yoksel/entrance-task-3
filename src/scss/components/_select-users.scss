@@ -142,13 +142,27 @@
   }
 }
 
-.select-users__placeholder {
+.select-users__message {
   display: none;
   padding: 8px 10px;
   font-size: 12px;
+}
+
+.select-users__message--placeholder {
   color: $color-silver;
 
   .select-users__results--empty & {
+    display: block;
+  }
+}
+
+.select-users__message--busy {
+  margin-top: 15px;
+  padding: 0;
+  order: 2;
+  color: $color-silver;
+
+  .select-users__results--busy & {
     display: block;
   }
 }

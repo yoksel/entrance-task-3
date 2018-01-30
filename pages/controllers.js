@@ -23,12 +23,39 @@ let pageReqBody = null;
 
 // ------------------------------
 
-function getPage (req, res) {
+function handleRequest (req, res) {
   pageResponse = res;
   pageReqBody = req.body;
 
-  console.log('\n\n++ pageReqBody ++');
-  console.log(pageReqBody);
+  query.events()
+    .then(response => {
+      data.events = response;
+
+      const matches = tools.findMatches(data.events, pageReqBody);
+
+      if (pageReqBody.action === 'create') {
+        if (matches.byDateRoom > 0) {
+          // Room & date match
+          console.log('Room & date match');
+          getPage();
+        } else {
+          createEvent();
+        }
+      } else if (pageReqBody.action === 'remove' && matches.byId > 0) {
+        removeEvent();
+      } else if (pageReqBody.action === 'update') {
+        updateEvent();
+      }
+      else {
+        // Unhandled action
+        getPage();
+      }
+    });
+}
+
+// ------------------------------
+
+function getPage () {
 
   const dataProms = [
     query.events(),
@@ -63,51 +90,12 @@ function getPage (req, res) {
         partials.hoursNav = response[2];
         partials.popupCalendar = response[3];
 
-        if (!pageReqBody.action) {
-          renderPage();
-          return;
-        }
-
-        handleRequest();
+        renderPage ();
       })
     .catch((error) => {
       console.log('\nPromises in getPage() failed:');
       console.log(error);
     });
-}
-
-// ------------------------------
-
-function handleRequest () {
-  console.log('handleRequest');
-  const matches = tools.findMatches(data.events, pageReqBody);
-
-  if (pageReqBody.action === 'create') {
-    // Dont check unique names
-    // Check users in other events
-    // console.log(matches.byDateUsers);
-    if (matches.byDateUsers.length > 0) {
-      const users = [];// getLoginsByIds(matches.byDateUsers);
-
-      actionError = `Событие <b>«${pageReqBody.title}»</b> не было создано, потому что некоторые сотрудники <i>${users.join(', ')}</i> будут в это время на другой встрече`;
-
-      queryEvents();
-    } else if (matches.byDateRoom > 0) {
-      actionError = `Событие <b>«${pageReqBody.title}»</b> не было создано, потому что до завершения этого события в этой переговорке начнётся другое`;
-
-      queryEvents();
-    } else {
-      createEvent();
-    }
-  } else if (pageReqBody.action === 'remove' && matches.byId > 0) {
-    removeEvent();
-  } else if (pageReqBody.action === 'update') {
-    updateEvent();
-  }
-  else {
-    // Unhandled action
-    renderPage();
-  }
 }
 
 // ------------------------------
@@ -130,7 +118,7 @@ function createEvent () {
   })
     .then(response => {
         // actionMessage = `Событие <b>«${response.dataValues.title}»</b> создано.`;
-        queryEvents();
+        getPage ();
       })
     .catch((e) => {
       console.log('\ncreateEvent failed: ');
@@ -159,7 +147,7 @@ function updateEvent () {
     .then(response => {
       // actionMessage = `Событие <b>«${response.dataValues.title}»</b> изменено.`;
 
-      queryEvents();
+      getPage ();
       })
     .catch((e) => {
       console.log('\nupdateEvent failed: ');
@@ -175,32 +163,12 @@ function removeEvent () {
       { id: pageReqBody.itemid }
     )
     .then(response => {
-        queryEvents();
+        getPage ();
       })
     .catch((e) => {
       console.log('\nremoveEvent() failed');
       console.log(e);
-    });
-}
-
-// ------------------------------
-
-function queryEvents () {
-  console.log('queryEvents ()');
-  query.events()
-    .then(response => {
-        data.events = response;
-        data.shedule = shedule.getSheduleList({
-          events: data.events,
-          floors: data.floors,
-          isHasItems: true
-        });
-
-        renderPage();
-      })
-    .catch((e) => {
-      console.log('\nPromises in queryEvents() failed:');
-      console.log(e);
+      getPage ();
     });
 }
 
@@ -234,4 +202,4 @@ function renderPage () {
 
 // ------------------------------
 
-module.exports.index = getPage;
+module.exports.index = handleRequest;

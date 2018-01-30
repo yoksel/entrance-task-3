@@ -18,7 +18,8 @@
     this.eventUserTmpl = getTemplate(eventUserTmplElem.outerHTML);
     this.classHighlighted = {
       input: 'select-users__label--highlighted',
-      control: 'select-users__result--highlighted'
+      control: 'select-users__result--highlighted',
+      busy: 'select-users__results--busy'
     };
 
     this.usersControl.addEventListener('click', (event) => {
@@ -105,40 +106,37 @@
 
   SelectUser.prototype.highlightUsers = function (users) {
     const results = this.elem.querySelectorAll('.select-users__result');
-    console.log('highlightUsers()');
-    console.log(users);
     const highlightInput = this.classHighlighted.input;
     const highlightControl = this.classHighlighted.control;
+    const highlightResults = this.classHighlighted.busy;
 
     this.checkboxInputs.forEach(input => {
       const label = input.labels[0];
-      // console.log(label);
-      console.log(input.value);
+
       if(users.indexOf(+input.value) >= 0) {
         label.classList.add(highlightInput);
-        console.log('+');
       }
       else {
         label.classList.remove(highlightInput);
-        console.log('-');
       }
     });
 
 
     results.forEach(result => {
-      console.log(result.value);
       if(users.indexOf(+result.value) >= 0) {
         result.classList.add(highlightControl);
-        console.log('+');
       }
       else {
         result.classList.remove(highlightControl);
-        console.log('-');
       }
     });
 
-    console.log('highlightUsers', users);
-    console.dir(this.checkboxInputs[0]);
+    if (users.length > 0) {
+      this.resultsElem.classList.add(highlightResults)
+    }
+    else {
+      this.resultsElem.classList.remove(highlightResults);
+    }
   }
 
   const selectUserElem = document.querySelector('.select-users');
