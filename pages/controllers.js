@@ -106,8 +106,8 @@ function getPage () {
 
 function createEvent () {
   console.log('\ncreateEvent()');
-  if(!pageReqBody.title || pageReqBody.usersIds.length == 0 || !pageReqBody.RoomId) {
-    // No data for event
+  if(!pageReqBody.title || pageReqBody.usersIds.length == 0 || !pageReqBody.roomId) {
+    // No data for event, event NOT created
     getPage ();
     return;
   }
@@ -127,6 +127,7 @@ function createEvent () {
     roomId: pageReqBody.roomId
   })
     .then(response => {
+        console.log('\nEvent created()');
         getPage ();
       })
     .catch((e) => {

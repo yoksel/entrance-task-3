@@ -7,6 +7,7 @@
 (function (window) {
   const SelectRoom = function (elem) {
     this.elem = elem;
+    this.legend = elem.querySelector('.form__legend');
     const items = elem.querySelectorAll('.select-room__item');
     this.list = elem.querySelector('.select-room__items');
     this.inputs = [];
@@ -22,6 +23,7 @@
         const input = context.querySelector('.select-room__input');
         input.checked = false;
         this.elem.classList.remove('select-room--room-selected');
+
       }
       else {
         this.elem.classList.add('select-room--room-selected');
@@ -29,19 +31,27 @@
     });
   };
 
-  SelectRoom.prototype.setRooms = function(rooms, date){
+  SelectRoom.prototype.setRooms = function(rooms, defaultRoom, date){
     const event = {
       timeStart: moment(date.start).format('H:mm'),
       timeEnd: moment(date.end).format('H:mm')
     };
     const roomsItems = rooms.map(room => {
-      return this.addRoom(room, event);
+      return this.addRoom(room, event, defaultRoom);
     });
 
     this.list.innerHTML = roomsItems.join('');
 
     this.group.classList.remove('form__group--hidden');
-    this.elem.classList.remove('select-room--room-selected');
+
+    if (rooms.indexOf(defaultRoom) >= 0) {
+      this.elem.classList.add('select-room--room-selected');
+      this.legend.innerHTML = 'Ваша переговорка';
+    }
+    else {
+      this.elem.classList.remove('select-room--room-selected');
+      this.legend.innerHTML = 'Рекомендованные переговорки';
+    }
   }
 
   SelectRoom.prototype.addRoom = function (id, event) {

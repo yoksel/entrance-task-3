@@ -97,10 +97,15 @@ function renderPage () {
   pageData.events = events.getPageData(data.events);
   pageData.slots = data.slots;
   pageData.rooms = rooms.getPageData(data.rooms);
+  let legendText = 'Рекомендованные переговорки';
+
+  if(pageQuery.roomId) {
+    legendText = 'Ваша переговорка';
+  }
 
   const usersData = users.getEventUsers(data.users);
   const roomsData = rooms.fillRooms({
-    title: 'Рекомендованные переговорки',
+    title: legendText,
     rooms: data.rooms,
     roomId: pageQuery.roomId
   });

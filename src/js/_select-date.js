@@ -40,7 +40,13 @@
   };
 
   SelectDate.prototype.getDateFromTime = function(timeInputValue) {
-    const date = moment(this.dayCodeInput.value);
+    const timeSrc = this.dayCodeInput.value;
+    let date = moment(timeSrc);
+
+    if(timeSrc == '') {
+      // Make no empty time for time validation while date is empty
+      date = moment();
+    }
     const timeSet = timeInputValue.split(':');
     const newDate = date.hour(+timeSet[0]).minute(+timeSet[1]);
 
@@ -59,8 +65,9 @@
     const timeFrom = this.getDateFromTime(this.timeFromInput.value).toISOString();
     const timeTo = this.getDateFromTime(this.timeToInput.value).toISOString();
 
-    if (this.timeFromInput.value && ! this.timeToInput.value) {
+    if (this.timeFromInput.value && this.timeToInput.value === '') {
       this.period.classList.remove('form__period--not-valid');
+      return;
     }
 
     if(timeFrom > timeTo) {

@@ -144,6 +144,8 @@
 
 .select-users__message {
   display: none;
+  flex-basis: 100%;
+  box-sizing: border-box;
   padding: 8px 10px;
   font-size: 12px;
 }
@@ -162,7 +164,17 @@
   order: 2;
   color: $color-silver;
 
+  &::before {
+    @include highlight;
+    position: relative;
+    margin-right: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
   .select-users__results--busy & {
-    display: block;
+    display: flex;
+    align-items: center;
   }
 }

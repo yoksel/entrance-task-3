@@ -120,9 +120,9 @@
     const recommendation = getRecommendation(data.date, data.members, data.db);
     console.log('\n\nrecommendation', recommendation);
 
-    if (recommendation.rooms.indexOf(defaultRoom.value) < 0) {
-      selectRoom.setRooms(recommendation.rooms, data.date);
-    }
+    // if (recommendation.rooms.indexOf(defaultRoom.value) < 0) {
+      selectRoom.setRooms(recommendation.rooms, defaultRoom.value, data.date);
+    // }
 
     const checkedUsers = checkUsers(data.date, data.members, data.db);
 

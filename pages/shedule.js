@@ -277,29 +277,12 @@ function sheduleToSlotsList (shedule) {
         return floor.rooms[num];
       });
 
-      // console.log('\nROOMSLIST\n');
-      // console.log(roomsList);
-
       roomsList.forEach(room => {
-        // console.log(room.slots);
         sheduleSlotsList[dayKey] = sheduleSlotsList[dayKey].concat(room.slots)
-      })
-
-      floors.push({
-        floor: floorNum,
-        rooms: roomsList
       });
+
     }
-
-    // sheduleSlotsList.push({
-    //   dayKey: dayKey,
-    //   floors: floors,
-    //   class: dayClass
-    // });
   }
-
-  // console.log('sheduleSlotsList[30-Jan]');
-  // console.log(sheduleSlotsList['30-Jan']);
 
   return sheduleSlotsList;
 }
