@@ -21,6 +21,9 @@ function getPage (req, res) {
   pageResponse = res;
   pageQuery = req.query;
 
+  console.log('CREATE REQ.QUERY');
+  console.log(pageQuery);
+
   data.event = fillData();
 
   const dataProms = [
@@ -42,12 +45,7 @@ function getPage (req, res) {
         data.floors = rooms.getRoomsByFloors(data.rooms);
         data.users = response[2];
 
-        data.shedule = shedule.getShedule({
-          events: data.events,
-          floors: data.floors,
-          isHasItems: false
-        });
-        data.sheduleTest = shedule.getSlotsList({
+        data.slots = shedule.getSlotsList({
           events: data.events,
           floors: data.floors,
           isHasItems: false
@@ -71,13 +69,22 @@ function getPage (req, res) {
 // ------------------------------
 
 function fillData () {
-  const dateTime = moment(pageQuery.dateTime);
-  const timeStart = dateTime.format('HH:mm');
-  const timeEnd = dateTime.clone().add(30, 'm').format('HH:mm');
+  let date = '';
+  let dayCode = '';
+  let timeStart = null;
+  let timeEnd = '';
+
+  if (pageQuery.dateTime) {
+    const dateTime = moment(pageQuery.dateTime);
+    date = dateTime.format('D MMMM');
+    dayCode = dateTime.toISOString();
+    timeStart = dateTime.format('HH:mm');
+    timeEnd = dateTime.clone().add(30, 'm').format('HH:mm');
+  }
 
   return {
-    dayCode: dateTime.toISOString(),
-    date: dateTime.format('D MMMM'),
+    dayCode: dayCode,
+    date: date,
     timeStart: timeStart,
     timeEnd: timeEnd
   };
@@ -88,7 +95,7 @@ function fillData () {
 function renderPage () {
   pageData.users = users.getUsersData(data.users);
   pageData.events = events.getPageData(data.events);
-  pageData.shedule = data.shedule;
+  pageData.slots = data.slots;
   pageData.rooms = rooms.getPageData(data.rooms);
 
   const usersData = users.getEventUsers(data.users);

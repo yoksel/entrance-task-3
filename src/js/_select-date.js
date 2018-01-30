@@ -56,22 +56,20 @@
   };
 
   SelectDate.prototype.validateTime = function(){
-    console.log('validateTime');
     const timeFrom = this.getDateFromTime(this.timeFromInput.value).toISOString();
     const timeTo = this.getDateFromTime(this.timeToInput.value).toISOString();
 
-    console.log(timeFrom, timeTo);
+    if (this.timeFromInput.value && ! this.timeToInput.value) {
+      this.period.classList.remove('form__period--not-valid');
+    }
 
-
-console.log('this.period', this.period);
     if(timeFrom > timeTo) {
       this.period.classList.add('form__period--not-valid');
     }
     else {
       this.period.classList.remove('form__period--not-valid');
     }
-    console.log('---------------');
-  }
+  };
 
   SelectDate.prototype.openPopup = function (event) {
     event.stopPropagation();

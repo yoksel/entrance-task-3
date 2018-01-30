@@ -46,7 +46,7 @@ function getPage (req, res) {
         data.rooms = response[3].sort(rooms.sortByFloor);
         data.floors = rooms.getRoomsByFloors(data.rooms);
 
-        data.shedule = shedule.getShedule({
+        data.slots = shedule.getSlotsList({
           events: data.events,
           floors: data.floors,
           isHasItems: false
@@ -91,7 +91,7 @@ function fillData (event) {
 function renderPage () {
   pageData.users = users.getUsersData(data.users);
   pageData.events = events.getPageData(data.events);
-  pageData.shedule = data.shedule;
+  pageData.slots = data.slots;
   pageData.rooms = rooms.getPageData(data.rooms);
 
   const usersData = users.getEventUsers(data.users, data.event.users);

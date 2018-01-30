@@ -3,11 +3,12 @@
 /* global moment, selectUser, selectRoom */
 
 (function(window) {
-  if (!pageData.shedule) {
+  if (!pageData.slots) {
     return;
   }
 
-  console.log(pageData.shedule);
+  console.log(pageData.slots);
+
   const form = document.querySelector('.form--event');
   const dayCode = form.querySelector('.select-datetime__daycode');
   const dateTimeInput = form.querySelector('.select-datetime__input');
@@ -28,22 +29,15 @@
     const dateEnd = moment(date.end);
     const dateEndIso = dateEnd.toISOString();
     const dayKey = dateStart.locale('en').format('D-MMM');
-    const floors = db.shedule[dayKey].floors;
-    const floorsList = Object.values(floors);
+    const slots = db.slots[dayKey];
     let foundedSlots = [];
 
-    floorsList.forEach(floor => {
-      const roomsList = Object.values(floor.rooms);
-      roomsList.forEach(room => {
-
-        room.slots.forEach(slot => {
-          if (!slot.event) {
-            if (slot.start <= dateStartIso && slot.end >= dateEndIso) {
-              foundedSlots.push(slot);
-            }
-          }
-        });
-      })
+    slots.forEach(slot => {
+      if (!slot.event) {
+        if (slot.start <= dateStartIso && slot.end >= dateEndIso) {
+          foundedSlots.push(slot);
+        }
+      }
     });
 
     recommendation.rooms = chooseRoom(foundedSlots, members, db.rooms);
@@ -60,8 +54,7 @@
     const dateEnd = moment(date.end);
     const dateEndIso = dateEnd.toISOString();
     const dayKey = dateStart.locale('en').format('D-MMM');
-    const floors = db.shedule[dayKey].floors;
-    const floorsList = Object.values(floors);
+    const slots = db.slots[dayKey];
     const eventId = eventIdElem ? eventIdElem.value : null;
     let foundedUsers = [];
 
@@ -69,26 +62,19 @@
       return member.id;
     });
 
-    floorsList.forEach(floor => {
-      const roomsList = Object.values(floor.rooms);
-      roomsList.forEach(room => {
+    slots.forEach(slot => {
+      if (slot.event && slot.event.id !== +eventId) {
+        if ((dateStartIso >= slot.start && dateStartIso <= slot.end) ||
+            (dateEndIso >= slot.start && dateEndIso <= slot.end)) {
+          const usersList = Object.values(slot.users);
 
-        room.slots.forEach(slot => {
-          if (slot.event && slot.event.id !== +eventId) {
-            if ((dateStartIso >= slot.start && dateStartIso <= slot.end) ||
-                (dateEndIso >= slot.start && dateEndIso <= slot.end)) {
-              const usersList = Object.values(slot.users);
-              foundedUsers = usersList.filter(user => {
-                if (membersList.indexOf(user.id) >= 0){
-                  return user.id;
-                }
-              });
-
+          foundedUsers = usersList.filter(user => {
+            if (membersList.indexOf(user.id) >= 0){
+              return user.id;
             }
-
-          }
-        });
-      })
+          });
+        }
+      }
     });
 
     const foundedIdList = foundedUsers.map(user => {
@@ -101,6 +87,10 @@
   // ------------------------------
 
   function addListeners() {
+    console.log('addListeners()');
+
+    console.log(dayCode);
+
     if(!dayCode) {
       return;
     }
@@ -122,8 +112,13 @@
   function updateRecommendation() {
     console.log('updateRecommendation');
     const data = collectData();
+
+    if (!data) {
+      return;
+    }
+
     const recommendation = getRecommendation(data.date, data.members, data.db);
-    // console.log('\n\nrecommendation', recommendation);
+    console.log('\n\nrecommendation', recommendation);
 
     if (recommendation.rooms.indexOf(defaultRoom.value) < 0) {
       selectRoom.setRooms(recommendation.rooms, data.date);
@@ -139,7 +134,16 @@
   // ------------------------------
 
   function collectData() {
-    const members = getMembersIds();
+    const valuesToCheck = [dayCode.value, timeFromInput.value, timeToInput.value];
+
+    const isValuesExists = valuesToCheck.every(value => {
+      return value;
+    });
+
+    if (!isValuesExists) {
+      return null;
+    }
+
     const day = moment(dayCode.value);
     const timeFromSet = timeFromInput.value.split(':');
     const timeFrom = day.clone().hour(timeFromSet[0]).minute(timeFromSet[1]);
@@ -149,6 +153,7 @@
       start: timeFrom.toISOString(),
       end: timeTo.toISOString()
     };
+    const members = getMembersIds();
 
     return {
       date: date,
@@ -176,25 +181,28 @@
   // ------------------------------
 
   function chooseRoom(slots, members, rooms) {
-    const nearest = slots.filter(slot => {
+    const nearest = [];
+
+    for(let i = 0; i < slots.length; i++) {
+      const slot = slots[i];
       const room = rooms[slot.room];
       const floor = room.floor;
       const capacity = room.capacity;
       let steps = 0;
 
       if(members.length > capacity) {
-        return;
+        continue
       }
 
       members.forEach(member => {
         steps += Math.abs(floor - member.homeFloor);
       });
 
-      return {
+      nearest.push({
         room: slot.room,
         steps: steps
-      };
-    });
+      });
+    }
 
     nearest.sort(sortBySteps);
 
@@ -207,7 +215,7 @@
 
   // ------------------------------
 
-  function sortBySteps(a,b) {
+  function sortBySteps(a, b) {
     const aSteps = a.steps;
     const bSteps = b.steps;
 

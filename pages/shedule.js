@@ -135,7 +135,7 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
 
 function fillItems(params) {
   if (!params.isHasItems) {
-    return;
+    return null;
   }
 
   const startDateTime = params.start;
@@ -258,7 +258,7 @@ function sheduleToList (shedule) {
 // ------------------------------
 
 function sheduleToSlotsList (shedule) {
-  const sheduleList = [];
+  let sheduleSlotsList = {};
 
   for (let dayKey in shedule) {
     const day = shedule[dayKey];
@@ -269,11 +269,21 @@ function sheduleToSlotsList (shedule) {
       isCurrent: dayKey === tools.todayDayKey
     });
 
+    sheduleSlotsList[dayKey] = [];
+
     for (let floorNum in day.floors) {
       const floor = day.floors[floorNum];
       const roomsList = Object.keys(floor.rooms).map(num => {
         return floor.rooms[num];
       });
+
+      // console.log('\nROOMSLIST\n');
+      // console.log(roomsList);
+
+      roomsList.forEach(room => {
+        // console.log(room.slots);
+        sheduleSlotsList[dayKey] = sheduleSlotsList[dayKey].concat(room.slots)
+      })
 
       floors.push({
         floor: floorNum,
@@ -281,14 +291,17 @@ function sheduleToSlotsList (shedule) {
       });
     }
 
-    sheduleList.push({
-      dayKey: dayKey,
-      floors: floors,
-      class: dayClass
-    });
+    // sheduleSlotsList.push({
+    //   dayKey: dayKey,
+    //   floors: floors,
+    //   class: dayClass
+    // });
   }
 
-  return sheduleList;
+  // console.log('sheduleSlotsList[30-Jan]');
+  // console.log(sheduleSlotsList['30-Jan']);
+
+  return sheduleSlotsList;
 }
 
 // ------------------------------
