@@ -1,19 +1,25 @@
-/* global closePopups, pageData, Mustache, getTemplate */
+'use strict';
+
+/* global closePopups, pageData, Mustache, getTemplate, updateRecommendation */
+
 // ------------------------------
 // SELECT USERS
 // ------------------------------
 
-(function () {
+(function (window) {
   const SelectUser = function (elem) {
     this.elem = elem;
     this.usersPopup = elem.querySelector('.popup--users');
     this.usersControl = elem.querySelector('.users-control');
     const textInput = elem.querySelector('.select-users__input--text');
     this.resultsElem = elem.querySelector('.select-users__results');
-    const checkboxLabels = elem.querySelectorAll('.select-users__label');
-    const checkboxInputs = elem.querySelectorAll('.select-users__input--checkbox');
+    this.checkboxInputs = this.elem.querySelectorAll('.select-users__input--checkbox');
     const eventUserTmplElem = document.querySelector('.templates .select-users__result');
     this.eventUserTmpl = getTemplate(eventUserTmplElem.outerHTML);
+    this.classHighlighted = {
+      input: 'select-users__label--highlighted',
+      control: 'select-users__result--highlighted'
+    };
 
     this.usersControl.addEventListener('click', (event) => {
       this.openPopup(event);
@@ -27,24 +33,22 @@
       this.uncheckUser(event.target);
     });
 
-    checkboxLabels.forEach(label => {
-      label.addEventListener('click', (event) => {
-        event.stopPropagation();
-        this.toggleUser(label);
+    this.checkboxInputs.forEach(input => {
+      input.addEventListener('change', (event) => {
+        this.toggleUser(input);
+        updateRecommendation();
       });
     });
   };
 
-  SelectUser.prototype.togglePlaceholder = function (event) {
+  SelectUser.prototype.togglePlaceholder = function () {
     const results = this.elem.querySelectorAll('.select-users__result');
 
     if (results.length > 0) {
       this.resultsElem.classList.remove('select-users__results--empty');
-    }
-    else {
+    } else {
       this.resultsElem.classList.add('select-users__results--empty');
     }
-
   };
 
   SelectUser.prototype.openPopup = function (event) {
@@ -63,6 +67,8 @@
     }
 
     resultElem.remove();
+    this.togglePlaceholder();
+    updateRecommendation();
   };
 
   SelectUser.prototype.removeResult = function (id) {
@@ -78,15 +84,15 @@
   SelectUser.prototype.addResult = function (id) {
     const data = pageData.users[id];
     Mustache.parse(this.eventUserTmpl);
-    var rendered = Mustache.render(this.eventUserTmpl, data);
+    const rendered = Mustache.render(this.eventUserTmpl, data);
 
     this.resultsElem.innerHTML += rendered;
     closePopups();
   };
 
-  SelectUser.prototype.toggleUser = function (label) {
-    const id = label.dataset.id;
-    const isChecked = !label.control.checked;
+  SelectUser.prototype.toggleUser = function (input) {
+    const id = input.value;
+    const isChecked = input.checked;
 
     if (isChecked) {
       this.addResult(id);
@@ -97,9 +103,49 @@
     this.togglePlaceholder();
   };
 
-  const selectUsers = document.querySelectorAll('.select-users');
+  SelectUser.prototype.highlightUsers = function (users) {
+    const results = this.elem.querySelectorAll('.select-users__result');
+    console.log('highlightUsers()');
+    console.log(users);
+    const highlightInput = this.classHighlighted.input;
+    const highlightControl = this.classHighlighted.control;
 
-  selectUsers.forEach(item => {
-    const selectUser = new SelectUser(item);
-  });
-}());
+    this.checkboxInputs.forEach(input => {
+      const label = input.labels[0];
+      // console.log(label);
+      console.log(input.value);
+      if(users.indexOf(+input.value) >= 0) {
+        label.classList.add(highlightInput);
+        console.log('+');
+      }
+      else {
+        label.classList.remove(highlightInput);
+        console.log('-');
+      }
+    });
+
+
+    results.forEach(result => {
+      console.log(result.value);
+      if(users.indexOf(+result.value) >= 0) {
+        result.classList.add(highlightControl);
+        console.log('+');
+      }
+      else {
+        result.classList.remove(highlightControl);
+        console.log('-');
+      }
+    });
+
+    console.log('highlightUsers', users);
+    console.dir(this.checkboxInputs[0]);
+  }
+
+  const selectUserElem = document.querySelector('.select-users');
+
+  if (selectUserElem) {
+    const selectUser = new SelectUser(selectUserElem);
+    window.selectUser = selectUser;
+  }
+
+}(window));

@@ -1,6 +1,9 @@
+'use strict';
+
 const path = require('path');
 const fs = require('fs');
 const mustache = require('mustache');
+const tools = require('./tools');
 
 // ------------------------------
 
@@ -39,27 +42,65 @@ function getRoomsData (data, selectedId) {
 
 // ------------------------------
 
-function getRoomsByFloors (data) {
-  const floorsWithRooms = {};
-  const floors = [];
+function getPageData (data) {
+  const roomsData = {};
 
-  data.forEach(room => {
-    const roomData = room.dataValues;
+  data.forEach(item => {
+    roomsData[item.id] = item.dataValues;
+  });
+
+  return roomsData;
+}
+
+// ------------------------------
+
+function fillRooms (data) {
+  const title = data.title;
+  const rooms = data.rooms;
+  const roomId = data.roomId;
+
+  const mods = ['rooms'];
+
+  if (!roomId) {
+    mods.push('hidden');
+  }
+
+  return {
+    default: roomId,
+    group: {
+      title: title,
+      class: tools.addMods({
+        class: 'form__group',
+        mods: mods
+      }),
+    },
+    list: getRoomsData(rooms, roomId),
+    mod: 'select-room--room-selected'
+  };
+}
+
+// ------------------------------
+
+function getRoomsByFloors (rooms) {
+  const floorsWithRooms = {};
+  const floorsList = [];
+
+  rooms.forEach(room => {
     const roomsObj = {
-      id: roomData.id,
-      title: roomData.title,
-      capacity: roomData.capacity
+      id: room.id,
+      title: room.title,
+      capacity: room.capacity
     };
 
-    if (!floorsWithRooms[roomData.floor]) {
-      floorsWithRooms[roomData.floor] = {
+    if (!floorsWithRooms[room.floor]) {
+      floorsWithRooms[room.floor] = {
         rooms: {},
         roomsList: []
       };
     }
 
-    floorsWithRooms[roomData.floor].rooms[roomData.id] = roomsObj;
-    floorsWithRooms[roomData.floor].roomsList.push(roomsObj);
+    floorsWithRooms[room.floor].rooms[room.id] = roomsObj;
+    floorsWithRooms[room.floor].roomsList.push(roomsObj);
   });
 
   for (let floor in floorsWithRooms) {
@@ -67,19 +108,37 @@ function getRoomsByFloors (data) {
       number: floor,
       rooms: floorsWithRooms[floor].roomsList
     };
-    floors.push(floorData);
+    floorsList.push(floorData);
   }
 
   return {
-    list: floors,
+    list: floorsList,
     obj: floorsWithRooms
   };
 }
 
 // ------------------------------
 
+function sortByFloor (a, b) {
+  const aFloor = a.dataValues.floor;
+  const bFloor = b.dataValues.floor;
+
+  if (aFloor > bFloor) {
+    return 1;
+  } else if (aFloor < bFloor) {
+    return -1;
+  }
+
+  return 0;
+}
+
+// ------------------------------
+
 module.exports = {
   getList: getList,
+  getPageData: getPageData,
   getRoomsData: getRoomsData,
-  getRoomsByFloors: getRoomsByFloors
+  getRoomsByFloors: getRoomsByFloors,
+  fillRooms: fillRooms,
+  sortByFloor: sortByFloor,
 };

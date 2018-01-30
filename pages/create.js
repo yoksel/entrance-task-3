@@ -1,25 +1,24 @@
 const resolvers = require('../graphql/resolvers')();
 const query = resolvers.Query;
-const mutation = resolvers.Mutation;
 const moment = require('moment');
 moment.locale('ru');
 
 const tools = require('./tools');
+const events = require('./events');
 const rooms = require('./rooms');
 const users = require('./users');
+const shedule = require('./shedule');
 const pageData = {};
 
 const data = {};
 const partials = {};
 let pageResponse = null;
-let pageReqBody = null;
 let pageQuery = null;
 
 // ------------------------------
 
 function getPage (req, res) {
   pageResponse = res;
-  pageReqBody = req.body;
   pageQuery = req.query;
 
   console.log('---- req.query');
@@ -33,40 +32,38 @@ function getPage (req, res) {
     query.users()
   ];
 
+  const partialsProms = [
+    tools.getPopupCalendar(),
+    tools.getPageTmpl('_event-user'),
+    tools.getPageTmpl('_select-room-item'),
+  ];
+
   Promise.all(dataProms)
-    .then(
-      response => {
+    .then(response => {
         data.events = response[0];
-        data.rooms = response[1].sort(tools.sortByFloor);
+        data.rooms = response[1].sort(rooms.sortByFloor);
+        data.floors = rooms.getRoomsByFloors(data.rooms);
+
+        data.shedule = shedule.getShedule({
+          events: data.events,
+          floors: data.floors,
+          isHasItems: false
+        });
         data.users = response[2];
-        data.users.light = users.getUsersList(data.users);
-
-      pageData.users = users.getUsersData(data.users);
-
-        const partialsProms = [
-          tools.getPopupCalendar(),
-          users.getEventUserTmpl()
-        ];
 
         return Promise.all(partialsProms);
-      },
-      error => {
-        console.log('\nPromises in getPage() failed:');
-        console.log(error);
-      }
-    )
-    .then(
-      response => {
+      })
+    .then(response => {
         partials.popupCalendar = response[0];
         partials.eventUserTmpl = response[1];
+        partials.eventRoomTmpl = response[2];
 
         renderPage();
-      },
-      error => {
-        console.log('\nPromises in getPage() failed:');
-        console.log(error);
-      }
-    );
+      })
+    .catch((error) => {
+      console.log('\nPromises in getPage() failed:');
+      console.log(error);
+    });
 }
 
 // ------------------------------
@@ -75,43 +72,30 @@ function fillData () {
   const dateTime = moment(pageQuery.dateTime);
   const timeStart = dateTime.format('HH:mm');
   const timeEnd = dateTime.clone().add(30, 'm').format('HH:mm');
-  console.log(timeStart, timeEnd);
 
   return {
     dayCode: dateTime.toISOString(),
     date: dateTime.format('D MMMM'),
     timeStart: timeStart,
-    timeEnd: timeEnd,
-  };
-}
-
-// ------------------------------
-
-function fillRooms() {
-
-  console.log('fillRooms');
-  const mods = ['rooms'];
-
-  if (!pageQuery.roomId) {
-    mods.push('hidden');
-  }
-
-  return {
-    group: {
-      title: 'Рекомендованные переговорки',
-      class: tools.addMods({
-        class: 'form__group',
-        mods: mods
-      })
-    },
-    list: rooms.getRoomsData(data.rooms, pageQuery.roomId),
-    mod: 'select-room--room-selected'
+    timeEnd: timeEnd
   };
 }
 
 // ------------------------------
 
 function renderPage () {
+  pageData.users = users.getUsersData(data.users);
+  pageData.events = events.getPageData(data.events);
+  pageData.shedule = data.shedule;
+  pageData.rooms = rooms.getPageData(data.rooms);
+
+  const usersData = users.getEventUsers(data.users);
+  const roomsData = rooms.fillRooms({
+    title: 'Рекомендованные переговорки',
+    rooms: data.rooms,
+    roomId: pageQuery.roomId
+  });
+
   pageResponse.render(
     'create',
     {
@@ -119,9 +103,10 @@ function renderPage () {
       monthes: tools.getMonthes,
       pageData: JSON.stringify(pageData),
       popupCalendar: partials.popupCalendar,
-      users: data.users.light,
+      users: usersData,
       eventUserTmpl: partials.eventUserTmpl,
-      rooms: fillRooms(),
+      eventRoomTmpl: partials.eventRoomTmpl,
+      rooms: roomsData,
       partials: {
         'symbols': 'components/_symbols',
         'page-header': 'components/_page-header',
@@ -129,7 +114,8 @@ function renderPage () {
         'select-users': 'components/_select-users',
         'select-room': 'components/_select-room',
         'popup--users': 'components/_popup--users',
-        'event-user': 'components/_event-user'
+        'event-user': 'components/_event-user',
+        'select-room-item': 'components/_select-room-item'
       }
     }
   );

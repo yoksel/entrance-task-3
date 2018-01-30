@@ -1,3 +1,5 @@
+'use strict';
+
 const path = require('path');
 const fs = require('fs');
 
@@ -16,29 +18,12 @@ function getUsersData (data) {
 
 // ------------------------------
 
-function getUsersList (data, checkedList) {
-  const usersList = [];
-  const checkedIds = getUsersIds(checkedList);
-
-  data.forEach(item => {
-    const itemData = item.dataValues;
-    if (checkedIds && checkedIds.indexOf(itemData.id) > -1) {
-      itemData.checked = 'checked';
-    }
-    usersList.push(itemData);
-  });
-
-  return usersList;
-}
-
-// ------------------------------
-
 function getUsersIds (users) {
   let result = null;
 
   if (users) {
     result = users.map(user => {
-      return user.dataValues.id;
+      return user.id;
     });
   }
 
@@ -47,16 +32,19 @@ function getUsersIds (users) {
 
 // ------------------------------
 
-function getEventUsers (users) {
+function getEventUsers (users, checkedList) {
+  const checkedIds = getUsersIds(checkedList);
+
   const usersData = users.map(user => {
     const itemData = user.dataValues;
+    itemData.avatar = `<img class="user__pic" alt="" src="${user.avatarUrl}">`;
+    itemData.isChecked = '';
 
-    return {
-      id: itemData.id,
-      login: itemData.login,
-      homeFloor: itemData.homeFloor,
-      avatarUrl: itemData.avatarUrl
-    };
+    if (checkedIds && checkedIds.indexOf(itemData.id) > -1) {
+      itemData.isChecked = 'checked';
+    }
+
+    return itemData;
   });
 
   return usersData;
@@ -81,7 +69,6 @@ function getEventUserTmpl () {
 
 module.exports = {
   getUsersData: getUsersData,
-  getUsersList: getUsersList,
   getEventUsers: getEventUsers,
   getEventUserTmpl: getEventUserTmpl
 };

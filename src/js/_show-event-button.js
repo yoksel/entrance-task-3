@@ -1,3 +1,5 @@
+'use strict';
+
 /* global getPlural, closePopups, getTemplate, pageData, Mustache */
 
 // ------------------------------
@@ -7,8 +9,18 @@
 (function () {
   const ShowEventButton = function (elem) {
     this.elem = elem;
-    this.popup = popupEdit;
-    this.tmpl = getTemplate(this.popup.elem.innerHTML);
+    this.popup = {
+      elem: document.querySelector('.popup--view-info'),
+      classOpened: 'popup--opened',
+      classRotated: 'popup--rotated',
+    };
+    this.popup.closePopup = function () {
+        this.popup.elem.classList.remove(this.popup.classOpened);
+    };
+    this.popup.content = this.popup.elem.querySelector('.popup__content');
+    this.arrow = this.popup.elem.querySelector('.popup__arrow');
+
+    this.tmpl = getTemplate(this.popup.content.innerHTML);
     this.data = this.collectData();
 
     elem.addEventListener('click', (event) => {
@@ -20,8 +32,8 @@
   };
 
   ShowEventButton.prototype.openPopup = function () {
-    this.setPopupPosition();
     this.fillPopup();
+    this.setPopupPosition();
   };
 
   ShowEventButton.prototype.collectData = function () {
@@ -34,8 +46,7 @@
 
     data.users = {
       login: data.users[0].login,
-      avatarUrl: data.users[0].avatarUrl,
-      avatarSrc: `src="${data.users[0].avatarUrl}`,
+      avatar: data.users[0].avatar,
       hasCount: !!usersCount,
       count: `${usersCount} ${usersForm}`
     };
@@ -47,7 +58,7 @@
     Mustache.parse(this.tmpl);
     var rendered = Mustache.render(this.tmpl, this.data);
 
-    this.popup.elem.innerHTML = rendered;
+    this.popup.content.innerHTML = rendered;
   };
 
   ShowEventButton.prototype.setPopupPosition = function () {
@@ -71,7 +82,6 @@
     const popupCoords = this.popup.elem.getBoundingClientRect();
     const popupHalfWidth = popupCoords.width / 2;
     const maxArrowOffset = popupHalfWidth - 15;
-    this.popup.arrow.style = '';
 
     let left = this.x - popupHalfWidth;
     const overflowRight = (this.x + popupHalfWidth) - window.innerWidth;
@@ -82,13 +92,13 @@
       if (popupLeft >= maxArrowOffset) {
         popupLeft = maxArrowOffset;
       }
-      this.popup.arrow.style.left = `${popupLeft}px`;
+      this.arrow.style.left = `${popupLeft}px`;
     } else if (left < 0) {
       let popupRight = Math.abs(left);
       if (popupRight >= maxArrowOffset) {
         popupRight = maxArrowOffset;
       }
-      this.popup.arrow.style.right = `${popupRight}px`;
+      this.arrow.style.right = `${popupRight}px`;
       left = 0;
     }
 
@@ -114,19 +124,6 @@
 
     return top;
   };
-
-  const popupEdit = {
-    elem: document.querySelector('.popup--view-info'),
-    classOpened: 'popup--opened',
-    classRotated: 'popup--rotated',
-    closePopup: function () {
-      popupEdit.elem.classList.remove(popupEdit.classOpened);
-    }
-  };
-
-  if (popupEdit.elem) {
-    popupEdit.arrow = popupEdit.elem.querySelector('.popup__arrow');
-  }
 
   const showEventButtons = document.querySelectorAll('.button-show-event');
   showEventButtons.forEach(item => {

@@ -3,9 +3,18 @@
     <ul class="select-users__list">
       {{#users}}
         <li class="select-users__item" data-searchtitle="{{login}}">
-          <input class="select-users__input select-users__input--checkbox visuallyhidden" type="checkbox" name="usersIds" id="user--{{id}}" value="{{id}}" {{checked}}>
+          <input
+            class="select-users__input select-users__input--checkbox visuallyhidden"
+            type="checkbox"
+            name="usersIds"
+            id="user--{{id}}"
+            value="{{id}}"
+            data-login="{{login}}"
+            data-floor="{{homeFloor}}"
+            data-avatar="{{avatarUrl}}"
+            {{isChecked}}>
           <label class="select-users__label" for="user--{{id}}" data-id="{{id}}">
-            <span class="user">
+            <span class="user user--tiny">
               <img class="user__pic user__pic--tiny" alt="" src="{{avatarUrl}}">
               {{login}} <span class="user__floor">{{homeFloor}} этаж</span>
             </span>

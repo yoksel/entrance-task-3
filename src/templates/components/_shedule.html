@@ -13,15 +13,17 @@
             <div class="shedule__slots-floor" data-dayKey="{{dayKey}}" data-floor="{{floor}}">
               {{#rooms}}
                 <ul class="slots__list" data-title="{{title}}" data-room-id="{{id}}">
-                  {{#events}}
-                    <li class="slot {{mod}}" {{{style}}}>
-                      <a class="slot__button button {{buttonMod}}" href="{{url}}" {{{data}}}>
-                        <svg class="button__icon">
-                          <use xlink:href="#plus"/>
-                        </svg>
-                      </a>
-                    </li>
-                  {{/events}}
+                  {{#slots}}
+                    {{#items}}
+                      <li class="slot {{mod}}" {{{style}}}>
+                        <a class="slot__button button {{buttonMod}}" href="{{url}}" {{{data}}}>
+                          <svg class="button__icon">
+                            <use xlink:href="#plus"/>
+                          </svg>
+                        </a>
+                      </li>
+                    {{/items}}
+                  {{/slots}}
                 </ul>
               {{/rooms}}
             </div>

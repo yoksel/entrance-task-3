@@ -30,12 +30,21 @@
             <input class="form__input" type="text" name="title" id="title" placeholder="О чём будете говорить?">
           </div>
 
-          <div class="form__group form__group--datetime">
+          <div class="form__group form__group--datetime select-datetime">
             <div class="form__select-date select-date">
               <label class="form__label" for="date">Дата <span class="form__additional-text">и время</span></label>
               <div class="form__input-wrapper">
-                <input type="hidden" name="daycode" class="select-date__daycode" value="{{event.dayCode}}">
-                <input class="form__input select-date__input" type="text" name="date" id="date" value="{{event.date}}">
+                <input
+                  class="select-datetime__daycode form__input--daycode"
+                  type="hidden"
+                  name="daycode"
+                  value="{{event.dayCode}}">
+                <input
+                  class="form__input select-datetime__input"
+                  type="text"
+                  name="date"
+                  id="date"
+                  value="{{event.date}}">
                 <button class="form__dropdown-control dropdown-control calendar-control" type="button">
                   <svg class="dropdown-control__icon dropdown-control__icon--calendar">
                     <use xlink:href="#calendar"/>
@@ -50,7 +59,7 @@
               <div class="form__period-item">
                 <label class="form__label" for="date">Начало</label>
                 <input
-                  class="form__input"
+                  class="form__input form__input--timefrom select-datetime__timefrom"
                   type="time"
                   name="timeFrom"
                   id="timeFrom"
@@ -64,7 +73,7 @@
               <div class="form__period-item">
                 <label class="form__label" for="date">Конец</label>
                 <input
-                  class="form__input"
+                  class="form__input form__input--timeto select-datetime__timeto"
                   type="time"
                   name="timeTo"
                   id="timeTo"
@@ -83,7 +92,7 @@
             {{> select-users}}
           </div>
 
-            {{> select-room}}
+          {{> select-room}}
         </div>
 
         <button class="form__select-room-button" type="button">Выберите переговорку</button>
@@ -105,6 +114,7 @@
 
     <div class="templates" style="display: none">
       {{{eventUserTmpl}}}
+      {{{eventRoomTmpl}}}
     </div>
 
     <script>

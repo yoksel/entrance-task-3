@@ -60,6 +60,7 @@
 }
 
 .select-users__label {
+  position: relative;
   display: flex;
   min-height: 32px;
   margin-left: -16px;
@@ -75,6 +76,10 @@
 
   &:hover {
     background: $color-darksmoke;
+  }
+
+  &--highlighted::after {
+    @include highlight;
   }
 }
 
@@ -103,6 +108,7 @@
   background: $color-smoke;
   border: none;
   border-radius: 16px;
+  overflow: hidden;
   cursor: pointer;
 
   /* glass */
@@ -130,11 +136,15 @@
   .user {
     margin-right: 7px;
   }
+
+  &--highlighted::after {
+    @include highlight;
+  }
 }
 
 .select-users__placeholder {
   display: none;
-  padding: 10px;
+  padding: 8px 10px;
   font-size: 12px;
   color: $color-silver;
 

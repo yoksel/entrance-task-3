@@ -1,33 +1,15 @@
+'use strict';
+
 const path = require('path');
 const fs = require('fs');
 const mustache = require('mustache');
 const moment = require('moment');
 moment.locale('ru');
-
-const eventsStep = 15;
-const eventsStepsInHour = 60 / eventsStep;
-const sheduleDaysMax = 10;
+const config = require('./config');
+const users = require('./users');
 
 const now = new Date();
-const year = now.getFullYear();
-const todayObj = parseDate(now);
 const daysList = getDaysList();
-const startHour = 8;
-const hoursInDay = 16;
-const slotWidth = 100/(hoursInDay * eventsStepsInHour); // %
-const hours = fillHours();
-
-// ------------------------------
-
-function fillHours () {
-  const hours = [];
-
-  for (let i = startHour; i < (startHour + hoursInDay); i++) {
-    hours.push(i);
-  }
-
-  return hours;
-}
 
 // ------------------------------
 
@@ -42,7 +24,7 @@ function parseDate (date) {
     dayNum: newDate.format('D'),
     dayKey: getDayKey(newDate),
     dayCode: newDate.format('DD/MM/YY'),
-    hours: newDate.format('H'),
+    hours: newDate.format('HH'),
     mins: newDate.format('mm'),
     dateFormat: newDate.format('D MMMM'),
     timeFormat: newDate.format('HH[:]mm')
@@ -51,7 +33,6 @@ function parseDate (date) {
 
 // ------------------------------
 
-// Input needs parsed date
 function prettyDate (event) {
   const itemData = event.dataValues;
   const dateTime = {
@@ -63,19 +44,18 @@ function prettyDate (event) {
   const dayEnd = dateTime.start.format('D-M');
   const date = {
     start: dateTime.start.format('D MMMM'),
-    end: dateTime.end.format('D MMMM'),
+    end: dateTime.end.format('D MMMM')
   };
   const time = {
     start: dateTime.start.format('HH[:]mm'),
-    end: dateTime.end.format('HH[:]mm'),
+    end: dateTime.end.format('HH[:]mm')
   };
 
   if (dayStart === dayEnd) {
     const period = `${time.start}&mdash;${time.end}`;
 
     return `${date.start}, ${period}`;
-  }
-  else {
+  } else {
     return `${date.start},
     ${time.start}&mdash;${date.end}, ${time.end}`;
   }
@@ -90,7 +70,7 @@ function getDaysList () {
     'Завтра'
   ];
 
-  for (let i = 0; i < sheduleDaysMax; i++) {
+  for (let i = 0; i < config.sheduleDaysMax; i++) {
     const newDate = moment().add(i, 'd');
     const key = getDayKey(newDate);
     const code = newDate.format('YYYY-MM-DD');
@@ -116,6 +96,7 @@ function getDaysList () {
 function getMonthes () {
   const MonthList = [];
   const monthesMax = 3;
+  const todayObj = parseDate(now);
 
   for (let m = 0; m < monthesMax; m++) {
     const firstDate = moment().add(m, 'M').date(1);
@@ -144,8 +125,7 @@ function getMonthes () {
       if (month === todayObj.monthNum) {
         if (d < todayObj.dayNum) {
           buttonClass += ' calendar__button--past';
-        }
-        else if (`${d}` === todayObj.dayNum) {
+        } else if (`${d}` === todayObj.dayNum) {
           buttonClass += ' calendar__button--today';
         }
       }
@@ -183,70 +163,14 @@ function getMonthes () {
 
 // ------------------------------
 
-function getPopupCalendar () {
-  const templatePath = '../src/templates/components/_popup--calendar.html';
-  const view = {
-    monthes: getMonthes
-  };
-
-  return new Promise(function (resolve, reject) {
-    fs.readFile(path.join(__dirname, templatePath), 'utf8', (err, template) => {
-      if (err) throw err;
-
-      resolve(mustache.render(template, view));
-    });
-  });
-}
-
-// ------------------------------
-
 function getDayKey (date) {
   const key = moment(date).locale('en').format('D-MMM');
   return key;
 }
 
-// ------------------------------
-
-function getEmptySheduleForFloor (floorsObj, day) {
-  const shedule = JSON.parse(JSON.stringify(floorsObj));
-
-  for (let floorNum in shedule) {
-    const floor = shedule[floorNum];
-
-    for (let roomId in floor.rooms) {
-      const room = floor.rooms[roomId];
-      room.events = [];
-
-      hours.forEach(hour => {
-        room.events = room.events.concat(getEmptyEvents(day, hour, roomId));
-      });
-    }
-  }
-
-  return shedule;
-}
-
-// ------------------------------
-
-function getEmptyEvents (day, hour, roomId) {
-  const events = [];
-
-  for (var i = 0; i < eventsStepsInHour; i++) {
-    let mins = eventsStep * i;
-    const dateTime = moment(day.code).hours(hour).minute(mins);
-    const dateTimeStr = dateTime.toISOString();
-
-    events.push({
-      style: `style="flex-basis: ${slotWidth}%"`,
-      hour: hour,
-      mins: mins,
-      event: {},
-      buttonMod: 'button--blue',
-      url: `./create?roomId=${roomId}&dateTime=${dateTimeStr}`
-    });
-  }
-
-  return events;
+function getDayCode (date) {
+  const code = moment(date).format('YYYY-MM-DD');
+  return code;
 }
 
 // ------------------------------
@@ -275,6 +199,23 @@ function getTimeFromRequest (pageReqBody) {
 
 // ------------------------------
 
+function getPopupCalendar () {
+  const templatePath = '../src/templates/components/_popup--calendar.html';
+  const view = {
+    monthes: getMonthes
+  };
+
+  return new Promise(function (resolve, reject) {
+    fs.readFile(path.join(__dirname, templatePath), 'utf8', (err, template) => {
+      if (err) throw err;
+
+      resolve(mustache.render(template, view));
+    });
+  });
+}
+
+// ------------------------------
+
 function findMatches (items, pageReqBody) {
   const matches = {
     byId: 0,
@@ -291,8 +232,7 @@ function findMatches (items, pageReqBody) {
 
       if (pageReqBody.title && (pageReqBody.title === itemData.title)) {
         matches.byName++;
-      }
-      else if (pageReqBody.login && pageReqBody.login === itemData.login) {
+      } else if (pageReqBody.login && pageReqBody.login === itemData.login) {
         matches.byName++;
       }
 
@@ -344,21 +284,6 @@ function findMatches (items, pageReqBody) {
 
 // ------------------------------
 
-function sortByFloor (a, b) {
-  const aFloor = a.dataValues.floor;
-  const bFloor = b.dataValues.floor;
-
-  if (aFloor > bFloor) {
-    return 1;
-  } else if (aFloor < bFloor) {
-    return -1;
-  }
-
-  return 0;
-}
-
-// ------------------------------
-
 function getDaysNav () {
   const templatePath = '../src/templates/components/_days-nav.html';
   const view = {
@@ -375,10 +300,10 @@ function getDaysNav () {
 
 // ------------------------------
 
-function getHoursNav (data) {
+function getHoursNav () {
   const hours = [];
-  const start = data.start;
-  const hoursInDay = data.hoursInDay;
+  const start = config.startHour;
+  const hoursInDay = config.hoursInDay;
 
   for (let i = start; i < (start + hoursInDay); i++) {
     let hour = i;
@@ -407,8 +332,7 @@ function getHoursNav (data) {
 function getSheduleDays (data) {
   const templatePath = '../src/templates/components/_shedule.html';
   const view = {
-    sheduleDays: data,
-    test: 'hello'
+    sheduleDays: data
   };
 
   return new Promise(function (resolve, reject) {
@@ -445,17 +369,16 @@ function addMods (params) {
 
 // ------------------------------
 
-function getUsersFromRequest(pageReqBody) {
+function getUsersFromRequest (pageReqBody) {
   let usersIds = [];
 
   if (!pageReqBody.usersIds) {
     return usersIds;
   }
 
-  if (typeof pageReqBody.usersIds === 'string'){
+  if (typeof pageReqBody.usersIds === 'string') {
     usersIds = [+pageReqBody.usersIds];
-  }
-  else {
+  } else {
     pageReqBody.usersIds.map(userId => {
       return +userId;
     });
@@ -466,27 +389,37 @@ function getUsersFromRequest(pageReqBody) {
 
 // ------------------------------
 
+function getPageTmpl (tmpl) {
+  return new Promise(function (resolve, reject) {
+    fs.readFile(path.join(__dirname, `../src/templates/components/${tmpl}.html`), 'utf8', (err, template) => {
+      if (err) throw err;
+
+      template = template.replace(/{/g, '[');
+      template = template.replace(/}/g, ']');
+
+      resolve(template);
+    });
+  });
+}
+
+// ------------------------------
+
 module.exports = {
   addMods: addMods,
   daysList: daysList,
-  eventsStep: eventsStep,
-  eventsStepsInHour: eventsStepsInHour,
   findMatches: findMatches,
   getDayKey: getDayKey,
+  getDayCode: getDayCode,
   getDaysNav: getDaysNav,
-  getEmptySheduleForFloor: getEmptySheduleForFloor,
   getEventDuration: getEventDuration,
   getHoursNav: getHoursNav,
   getMonthes: getMonthes,
+  getPageTmpl: getPageTmpl,
   getPopupCalendar: getPopupCalendar,
   getTimeFromRequest: getTimeFromRequest,
   getSheduleDays: getSheduleDays,
   getUsersFromRequest: getUsersFromRequest,
-  hoursInDay: hoursInDay,
   prettyDate: prettyDate,
   parseDate: parseDate,
-  slotWidth: slotWidth,
-  sortByFloor: sortByFloor,
-  startHour: startHour,
-  todayDayKey: getDayKey(now),
+  todayDayKey: getDayKey(now)
 };

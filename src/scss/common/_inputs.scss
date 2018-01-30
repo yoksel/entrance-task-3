@@ -33,6 +33,15 @@ INPUT, SELECT, BUTTON {
   color: $color-lightsilver;
 }
 
+input[type="time"]::-webkit-inner-spin-button,
+input[type="time"]::-webkit-clear-button {
+  display: none;
+  }
+
+input[type=time] {
+  -moz-appearance:textfield;
+}
+
 INPUT[type="text"],
 INPUT[type="time"],
 INPUT[type="search"],

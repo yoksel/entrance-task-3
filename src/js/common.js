@@ -1,3 +1,5 @@
+'use strict';
+
 /* global throttle, getTemplate */
 
 function throttle (func) {

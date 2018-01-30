@@ -12,14 +12,14 @@
   </div>
 
   <div class="select-users__results">
-    {{#eventUsers}}
-      {{> event-user }}
-    {{/eventUsers}}
+    {{#users}}
+      {{#isChecked}}
+        {{> event-user }}
+      {{/isChecked}}
+    {{/users}}
 
-    {{^eventUsers}}
-      <div class="select-users__placeholder">
+    <div class="select-users__placeholder">
         Добавьте участников встречи
-      </div>
-    {{/eventUsers}}
+    </div>
   </div>
 </div>

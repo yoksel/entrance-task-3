@@ -2,21 +2,10 @@
   <legend class="form__legend">{{rooms.group.title}}</legend>
 
   <div class="select-room {{rooms.mod}}">
+    <input class="select-room__default" type="hidden" name="default-room" value="{{rooms.default}}">
     <ul class="select-room__items">
       {{#rooms.list}}
-        <li class="select-room__item">
-          <input class="select-room__input select-room__input--radio visuallyhidden" type="radio" name="roomId" id="room-{{id}}" value="{{id}}" {{checked}}>
-          <label class="select-room__label" for="room-{{id}}">
-            <time class="select-room__time">16:00—16:30</time>
-            <span class="select-room__room">{{title}} · {{floor}} этаж</span>
-          </label>
-
-          <buton class="close-control select-room__close-control">
-            <svg class="close-control__icon">
-              <use xlink:href="#close"/>
-            </svg>
-          </buton>
-        </li>
+        {{> select-room-item}}
       {{/rooms.list}}
     </ul>
   </div>
