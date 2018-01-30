@@ -1,28 +1,32 @@
-<div class="select-users">
-  <div class="select-users__input-wrapper">
-    <input class="select-users__input select-users__input--text search-input" type="text" id="users" placeholder="Например, Тор Одинович"
-    data-selector=".select-users__item">
-    <button class="select-users__dropdown-control dropdown-control dropdown-control--arrow users-control" type="button">
-      <svg class="dropdown-control__icon dropdown-control__icon--arrow">
-        <use xlink:href="#arrow-top"/>
-      </svg>
-    </button>
+<div class="form__group form__group--users">
+  <label class="form__label" for="users">Участники</label>
 
-    {{> popup--users }}
-  </div>
+  <div class="select-users">
+    <div class="select-users__input-wrapper">
+      <input class="select-users__input select-users__input--text search-input" type="text" id="users" placeholder="Например, Тор Одинович"
+      data-selector=".select-users__item">
+      <button class="select-users__dropdown-control dropdown-control dropdown-control--arrow users-control" type="button">
+        <svg class="dropdown-control__icon dropdown-control__icon--arrow">
+          <use xlink:href="#arrow-top"/>
+        </svg>
+      </button>
 
-  <div class="select-users__results">
-    {{#users}}
-      {{#isChecked}}
-        {{> event-user }}
-      {{/isChecked}}
-    {{/users}}
-
-    <div class="select-users__message select-users__message--placeholder">
-        Добавьте участников встречи
+      {{> popup--users }}
     </div>
-    <div class="select-users__message select-users__message--busy">
-        Некоторые участники могут быть на других встречах
+
+    <div class="select-users__results">
+      {{#users}}
+        {{#isChecked}}
+          {{> event-user }}
+        {{/isChecked}}
+      {{/users}}
+
+      <div class="select-users__message select-users__message--placeholder">
+          Добавьте участников встречи
+      </div>
+      <div class="select-users__message select-users__message--busy">
+          Некоторые участники могут быть на других встречах
+      </div>
     </div>
   </div>
 </div>

@@ -8,12 +8,13 @@
   }
 
   console.log(pageData.shedule);
-  const form = document.querySelector('.form');
+  const form = document.querySelector('.form--event');
   const dayCode = form.querySelector('.select-datetime__daycode');
   const dateTimeInput = form.querySelector('.select-datetime__input');
   const timeFromInput = form.querySelector('.select-datetime__timefrom');
   const timeToInput = form.querySelector('.select-datetime__timeto');
   const defaultRoom = form.querySelector('.select-room__default');
+  const eventIdElem = form.querySelector('.form__itemid');
 
   addListeners();
 
@@ -61,6 +62,7 @@
     const dayKey = dateStart.locale('en').format('D-MMM');
     const floors = db.shedule[dayKey].floors;
     const floorsList = Object.values(floors);
+    const eventId = eventIdElem.value;
     let foundedUsers = [];
 
     const membersList = members.map(member => {
@@ -72,7 +74,7 @@
       roomsList.forEach(room => {
 
         room.slots.forEach(slot => {
-          if (slot.event) {
+          if (slot.event && slot.event.id !== +eventId) {
             if ((dateStartIso >= slot.start && dateStartIso <= slot.end) ||
                 (dateEndIso >= slot.start && dateEndIso <= slot.end)) {
               const usersList = Object.values(slot.users);
@@ -88,7 +90,6 @@
         });
       })
     });
-    console.log('foundedUsers', foundedUsers);
 
     const foundedIdList = foundedUsers.map(user => {
       return user.id;

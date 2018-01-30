@@ -3,10 +3,14 @@
 }
 .event__title {
   margin-bottom: 8px;
-  padding-right: 30px;
+  padding-right: 40px;
   line-height: 24px;
   font-size: 20px;
   font-weight: 700;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   @media(min-width: $bp-desktop) {
     margin-bottom: 2px;

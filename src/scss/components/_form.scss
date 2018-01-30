@@ -130,6 +130,10 @@ $form-maxwidth-tablet: 600px;
 .form__input {
   display: block;
   width: 100%;
+
+  &--calendar-opened + .calendar-control .dropdown-control__icon {
+    fill: #000;
+  }
 }
 
 .form__select-date {

@@ -50,7 +50,11 @@ function handleRequest (req, res) {
         // Unhandled action
         getPage();
       }
-    });
+    })
+    .catch((error) => {
+      console.log('\nPromises in handleRequest() failed:');
+      console.log(error);
+    });;
 }
 
 // ------------------------------
@@ -102,6 +106,12 @@ function getPage () {
 
 function createEvent () {
   console.log('\ncreateEvent()');
+  if(!pageReqBody.title || pageReqBody.usersIds.length == 0 || !pageReqBody.RoomId) {
+    // No data for event
+    getPage ();
+    return;
+  }
+
   const dateTimeStart = moment(pageReqBody.daycode);
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
@@ -117,7 +127,6 @@ function createEvent () {
     roomId: pageReqBody.roomId
   })
     .then(response => {
-        // actionMessage = `Событие <b>«${response.dataValues.title}»</b> создано.`;
         getPage ();
       })
     .catch((e) => {
@@ -145,8 +154,6 @@ function updateEvent () {
     roomId: pageReqBody.roomid
   })
     .then(response => {
-      // actionMessage = `Событие <b>«${response.dataValues.title}»</b> изменено.`;
-
       getPage ();
       })
     .catch((e) => {

@@ -8,8 +8,8 @@ const events = require('./events');
 const rooms = require('./rooms');
 const users = require('./users');
 const shedule = require('./shedule');
-const pageData = {};
 
+const pageData = {};
 const data = {};
 const partials = {};
 let pageResponse = null;
@@ -20,9 +20,6 @@ let pageQuery = null;
 function getPage (req, res) {
   pageResponse = res;
   pageQuery = req.query;
-
-  console.log('---- req.query');
-  console.log();
 
   data.event = fillData();
 
@@ -43,6 +40,7 @@ function getPage (req, res) {
         data.events = response[0];
         data.rooms = response[1].sort(rooms.sortByFloor);
         data.floors = rooms.getRoomsByFloors(data.rooms);
+        data.users = response[2];
 
         data.shedule = shedule.getShedule({
           events: data.events,
@@ -54,7 +52,6 @@ function getPage (req, res) {
           floors: data.floors,
           isHasItems: false
         });
-        data.users = response[2];
 
         return Promise.all(partialsProms);
       })
@@ -120,7 +117,8 @@ function renderPage () {
         'select-room': 'components/_select-room',
         'popup--users': 'components/_popup--users',
         'event-user': 'components/_event-user',
-        'select-room-item': 'components/_select-room-item'
+        'select-room-item': 'components/_select-room-item',
+        'select-datetime': 'components/_select-datetime'
       }
     }
   );

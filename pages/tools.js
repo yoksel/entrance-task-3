@@ -121,11 +121,12 @@ function getMonthes () {
       let dayClass = 'calendar__day';
       let buttonClass = 'calendar__button';
       let dayStyle = '';
+      const day = dayDate.format('D');
 
       if (month === todayObj.monthNum) {
-        if (d < todayObj.dayNum) {
+        if (day < todayObj.dayNum) {
           buttonClass += ' calendar__button--past';
-        } else if (`${d}` === todayObj.dayNum) {
+        } else if (day === todayObj.dayNum) {
           buttonClass += ' calendar__button--today';
         }
       }
@@ -134,7 +135,7 @@ function getMonthes () {
         day: dayDate.format('D'),
         dayClass: dayClass,
         dayStyle: dayStyle,
-        dayCode: dayDate.format('YYYYMMD'),
+        dayCode: dayDate.toISOString(),
         button: [
           buttonClass
         ]
@@ -202,7 +203,7 @@ function getTimeFromRequest (pageReqBody) {
 function getPopupCalendar () {
   const templatePath = '../src/templates/components/_popup--calendar.html';
   const view = {
-    monthes: getMonthes
+    monthes: getMonthes()
   };
 
   return new Promise(function (resolve, reject) {

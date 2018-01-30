@@ -6,26 +6,23 @@ const moment = require('moment');
 moment.locale('ru');
 
 const tools = require('./tools');
+const events = require('./events');
 const rooms = require('./rooms');
 const users = require('./users');
-const pageData = {};
+const shedule = require('./shedule');
 
+const pageData = {};
 const data = {};
 const partials = {};
 let pageResponse = null;
-let pageReq = null;
-let pageReqBody = null;
+let pageQuery = null;
 
 // ------------------------------
 
 function getPage (req, res) {
   pageResponse = res;
-  pageReq = req;
-  pageReqBody = req.body;
+  pageQuery = req.query;
   const eventId = req.query['event-id'];
-
-  console.log('EDIT REQ.QUERY');
-  console.log(req.query);
 
   const dataProms = [
     query.event(global, {id: eventId}),
@@ -36,7 +33,8 @@ function getPage (req, res) {
 
   const partialsProms = [
     tools.getPopupCalendar(),
-    users.getEventUserTmpl()
+    tools.getPageTmpl('_event-user'),
+    tools.getPageTmpl('_select-room-item'),
   ];
 
   Promise.all(dataProms)
@@ -46,12 +44,20 @@ function getPage (req, res) {
         data.events = response[1];
         data.users = response[2];
         data.rooms = response[3].sort(rooms.sortByFloor);
+        data.floors = rooms.getRoomsByFloors(data.rooms);
+
+        data.shedule = shedule.getShedule({
+          events: data.events,
+          floors: data.floors,
+          isHasItems: false
+        });
 
         return Promise.all(partialsProms);
       })
     .then(response => {
         partials.popupCalendar = response[0];
         partials.eventUserTmpl = response[1];
+        partials.eventRoomTmpl = response[2];
 
         renderPage();
       })
@@ -84,6 +90,10 @@ function fillData (event) {
 
 function renderPage () {
   pageData.users = users.getUsersData(data.users);
+  pageData.events = events.getPageData(data.events);
+  pageData.shedule = data.shedule;
+  pageData.rooms = rooms.getPageData(data.rooms);
+
   const usersData = users.getEventUsers(data.users, data.event.users);
   const roomsData = rooms.fillRooms({
     title: 'Ваша переговорка',
@@ -99,8 +109,8 @@ function renderPage () {
       pageData: JSON.stringify(pageData),
       popupCalendar: partials.popupCalendar,
       users: usersData,
-      eventUsers: usersData,
       eventUserTmpl: partials.eventUserTmpl,
+      eventRoomTmpl: partials.eventRoomTmpl,
       rooms: roomsData,
       partials: {
         'symbols': 'components/_symbols',
@@ -109,7 +119,9 @@ function renderPage () {
         'select-users': 'components/_select-users',
         'select-room': 'components/_select-room',
         'popup--users': 'components/_popup--users',
-        'event-user': 'components/_event-user'
+        'event-user': 'components/_event-user',
+        'select-room-item': 'components/_select-room-item',
+        'select-datetime': 'components/_select-datetime'
       }
     }
   );
