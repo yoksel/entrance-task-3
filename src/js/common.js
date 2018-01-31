@@ -1,7 +1,5 @@
 'use strict';
 
-/* global throttle, getTemplate */
-
 function throttle (func) {
   setTimeout(func, 100);
 }

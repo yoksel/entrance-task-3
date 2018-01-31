@@ -39,11 +39,11 @@
     });
   };
 
-  SelectDate.prototype.getDateFromTime = function(timeInputValue) {
+  SelectDate.prototype.getDateFromTime = function (timeInputValue) {
     const timeSrc = this.dayCodeInput.value;
     let date = moment(timeSrc);
 
-    if(timeSrc == '') {
+    if (timeSrc === '') {
       // Make no empty time for time validation while date is empty
       date = moment();
     }
@@ -51,7 +51,7 @@
     const newDate = date.hour(+timeSet[0]).minute(+timeSet[1]);
 
     return newDate;
-  }
+  };
 
   SelectDate.prototype.setDate = function (date) {
     moment.locale('ru');
@@ -61,7 +61,7 @@
     closePopups();
   };
 
-  SelectDate.prototype.validateTime = function(){
+  SelectDate.prototype.validateTime = function () {
     const timeFrom = this.getDateFromTime(this.timeFromInput.value).toISOString();
     const timeTo = this.getDateFromTime(this.timeToInput.value).toISOString();
 
@@ -70,10 +70,9 @@
       return;
     }
 
-    if(timeFrom > timeTo) {
+    if (timeFrom > timeTo) {
       this.period.classList.add('form__period--not-valid');
-    }
-    else {
+    } else {
       this.period.classList.remove('form__period--not-valid');
     }
   };

@@ -1,5 +1,6 @@
 <li class="select-room__item select-room__item--room">
-  <input class="select-room__input select-room__input--room select-room__input--radio visuallyhidden" type="radio" name="roomId" id="room--{{id}}" value="{{id}}" {{checked}}>
+  <input class="select-room__input select-room__input--room select-room__input--radio visuallyhidden" type="radio" name="roomId" id="room--{{id}}" value="{{id}}" {{checked}}
+  data-group=".form__group--rooms">
   <label class="select-room__label" for="room--{{id}}">
     <time class="select-room__time">{{event.timeStart}}—{{event.timeEnd}}</time>
     <span class="select-room__room">{{title}} · {{floor}} этаж</span>

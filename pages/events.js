@@ -3,11 +3,11 @@ const users = require('./users');
 
 // ------------------------------
 
-function getPageData(eventsData) {
+function getPageData (eventsData) {
   const events = {};
 
   eventsData.forEach((event) => {
-    if(event.title && event.users.length > 0 && event.RoomId) {
+    if (event.title && event.users.length > 0 && event.RoomId) {
       events[event.id] = {
         id: event.id,
         title: event.title,
@@ -29,5 +29,5 @@ function getPageData(eventsData) {
 // ------------------------------
 
 module.exports = {
-  getPageData: getPageData,
+  getPageData: getPageData
 };

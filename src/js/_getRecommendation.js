@@ -1,13 +1,11 @@
 'use strict';
 
-/* global moment, selectUser, selectRoom */
+/* global moment, pageData, selectUser, selectRoom */
 
-(function(window) {
+(function (window) {
   if (!pageData.slots) {
     return;
   }
-
-  console.log(pageData.slots);
 
   const form = document.querySelector('.form--event');
   const dayCode = form.querySelector('.select-datetime__daycode');
@@ -21,8 +19,7 @@
 
   // ------------------------------
 
-  function getRecommendation(date, members, db) {
-    console.log('getRecommendation for', date);
+  function getRecommendation (date, members, db) {
     const recommendation = {};
     const dateStart = moment(date.start);
     const dayKey = dateStart.locale('en').format('D-MMM');
@@ -34,14 +31,10 @@
     const slots = db.slots[dayKey];
 
     recommendation.date = date;
-
     recommendation.rooms = chooseRoom(dateIso, slots, members, db.rooms);
 
-    if(recommendation.rooms.length === 0) {
-      console.log('Need swaps');
+    if (recommendation.rooms.length === 0) {
       recommendation.swaps = getSwaps(dateIso, slots, members, db);
-      console.log('recommendation.swaps');
-      console.log(recommendation.swaps);
     }
 
     return recommendation;
@@ -49,8 +42,7 @@
 
   // ------------------------------
 
-  function checkUsers(date, members, db) {
-    const checkedUsers = [];
+  function checkUsers (date, members, db) {
     const dateStart = moment(date.start);
     const dateStartIso = dateStart.toISOString();
     const dateEnd = moment(date.end);
@@ -66,15 +58,17 @@
 
     slots.forEach(slot => {
       if (slot.event && slot.event.id !== +eventId) {
-        if ((dateStartIso >= slot.start && dateStartIso <= slot.end) ||
-            (dateEndIso >= slot.start && dateEndIso <= slot.end)) {
+        // Has bug here, can't check multy users on the same time events
+        if ((dateStartIso <= slot.start && dateEndIso >= slot.start && dateEndIso <= slot.end) ||
+            (dateStartIso >= slot.start && dateStartIso <= slot.end && dateEndIso >= slot.end)) {
           const usersList = Object.values(slot.users);
 
-          foundedUsers = usersList.filter(user => {
-            if (membersList.indexOf(user.id) >= 0){
-              return user.id;
+          const filtered = usersList.filter(user => {
+            if (membersList.indexOf(user.id) >= 0) {
+              return user;
             }
           });
+          foundedUsers = foundedUsers.concat(filtered);
         }
       }
     });
@@ -88,12 +82,8 @@
 
   // ------------------------------
 
-  function addListeners() {
-    console.log('addListeners()');
-
-    console.log(dayCode);
-
-    if(!dayCode) {
+  function addListeners () {
+    if (!dayCode) {
       return;
     }
 
@@ -111,8 +101,7 @@
 
   // ------------------------------
 
-  function updateRecommendation() {
-    console.log('updateRecommendation');
+  function updateRecommendation () {
     const data = collectData();
 
     if (!data) {
@@ -120,26 +109,20 @@
     }
 
     const recommendation = getRecommendation(data.date, data.members, data.db);
-    console.log('\n\nrecommendation', recommendation);
 
-    // if (recommendation.rooms.indexOf(defaultRoom.value) < 0) {
-      selectRoom.setRooms(recommendation, defaultRoom.value);
-    // }
+    selectRoom.setRooms(recommendation, defaultRoom.value);
 
-    if(recommendation.swaps && recommendation.swaps.length > 0) {
-        selectRoom.showSwaps(recommendation);
-      }
+    if (recommendation.swaps && recommendation.swaps.length > 0) {
+      selectRoom.showSwaps(recommendation);
+    }
 
     const checkedUsers = checkUsers(data.date, data.members, data.db);
-
     selectUser.highlightUsers(checkedUsers);
-
-    console.log('---------------------');
   }
 
   // ------------------------------
 
-  function collectData() {
+  function collectData () {
     const valuesToCheck = [dayCode.value, timeFromInput.value, timeToInput.value];
 
     const isValuesExists = valuesToCheck.every(value => {
@@ -176,7 +159,7 @@
 
     membersInputs.forEach = [].forEach;
     membersInputs.forEach(input => {
-      if(input.checked) {
+      if (input.checked) {
         members.push(pageData.users[input.value]);
       }
     });
@@ -186,7 +169,7 @@
 
   // ------------------------------
 
-  function chooseRoom(dateIso, slots, members, rooms) {
+  function chooseRoom (dateIso, slots, members, rooms) {
     const nearest = [];
     const foundedSlots = [];
 
@@ -198,15 +181,15 @@
       }
     });
 
-    for(let i = 0; i < foundedSlots.length; i++) {
+    for (let i = 0; i < foundedSlots.length; i++) {
       const slot = foundedSlots[i];
       const room = rooms[slot.room];
       const floor = room.floor;
       const capacity = room.capacity;
       let steps = 0;
 
-      if(members.length > capacity) {
-        continue
+      if (members.length > capacity) {
+        continue;
       }
 
       members.forEach(member => {
@@ -230,13 +213,13 @@
 
   // ------------------------------
 
-  function getSwaps(dateIso, slots, members, db) {
+  function getSwaps (dateIso, slots, members, db) {
     const foundedSwaps = [];
 
     slots.forEach(slot => {
       if (slot.event) {
         if (slot.start <= dateIso.start && slot.end >= dateIso.end) {
-          if(slot.swapReady) {
+          if (slot.swapReady) {
             const event = db.events[slot.event.id];
             const rooms = chooseRoom(event.dateSrc, slots, event.users, db.rooms);
 
@@ -256,7 +239,7 @@
 
   // ------------------------------
 
-  function sortBySteps(a, b) {
+  function sortBySteps (a, b) {
     const aSteps = a.steps;
     const bSteps = b.steps;
 
@@ -271,5 +254,4 @@
   // ------------------------------
 
   window.updateRecommendation = updateRecommendation;
-
 }(window));

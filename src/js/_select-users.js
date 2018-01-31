@@ -37,6 +37,7 @@
     this.checkboxInputs.forEach(input => {
       input.addEventListener('change', (event) => {
         this.toggleUser(input);
+
         updateRecommendation();
       });
     });
@@ -69,6 +70,7 @@
 
     resultElem.remove();
     this.togglePlaceholder();
+
     updateRecommendation();
   };
 
@@ -113,31 +115,27 @@
     this.checkboxInputs.forEach(input => {
       const label = input.labels[0];
 
-      if(users.indexOf(+input.value) >= 0) {
+      if (users.indexOf(+input.value) >= 0) {
         label.classList.add(highlightInput);
-      }
-      else {
+      } else {
         label.classList.remove(highlightInput);
       }
     });
 
-
     results.forEach(result => {
-      if(users.indexOf(+result.value) >= 0) {
+      if (users.indexOf(+result.value) >= 0) {
         result.classList.add(highlightControl);
-      }
-      else {
+      } else {
         result.classList.remove(highlightControl);
       }
     });
 
     if (users.length > 0) {
-      this.resultsElem.classList.add(highlightResults)
-    }
-    else {
+      this.resultsElem.classList.add(highlightResults);
+    } else {
       this.resultsElem.classList.remove(highlightResults);
     }
-  }
+  };
 
   const selectUserElem = document.querySelector('.select-users');
 
@@ -145,5 +143,4 @@
     const selectUser = new SelectUser(selectUserElem);
     window.selectUser = selectUser;
   }
-
 }(window));

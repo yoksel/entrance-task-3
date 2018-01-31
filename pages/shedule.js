@@ -1,5 +1,4 @@
 const tools = require('./tools');
-const rooms = require('./rooms');
 const config = require('./config');
 const moment = require('moment');
 moment.locale('ru');
@@ -27,7 +26,6 @@ function getShedule (params) {
   const floors = params.floors;
   const isHasItems = params.isHasItems;
   const shedule = {};
-  let sheduleList = [];
 
   tools.daysList.forEach(day => {
     shedule[day.key] = {};
@@ -49,25 +47,18 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
     for (let roomId in floor.rooms) {
       const room = floor.rooms[roomId];
       const capacity = room.capacity;
-      // console.log('\n-- ROOM:', roomId, room.title);
       room.slots = [];
-      let date = moment(day.code);
       let startTime = moment(day.code).hours(config.startHour);
       let endTime = moment(day.code).hours(config.lastHour);
 
       hours.forEach(hour => {
-
         let startTimeIso = moment(day.code).hours(hour).toISOString();
 
         events.forEach(event => {
-          const eventStart = moment(event.dateStart);
           const eventStartHour = moment(event.dateStart).minute(0).second(0).millisecond(0);
           const eventStartTimeIso = eventStartHour.toISOString();
 
-          const eventDayCode = tools.getDayCode(event.dateStart);
-
           if (event.RoomId === +roomId && eventStartTimeIso === startTimeIso) {
-
             const eventStartTime = moment(event.dateStart);
             const eventEndTime = moment(event.dateEnd);
 
@@ -135,7 +126,7 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
 
 // ------------------------------
 
-function fillItems(params) {
+function fillItems (params) {
   if (!params.isHasItems) {
     return null;
   }
@@ -170,15 +161,13 @@ function fillItems(params) {
   }
 
   // Fill each hour
-  for(let h = 0; h < itemsQuantity; h ++) {
-    const item = {};
+  for (let h = 0; h < itemsQuantity; h++) {
     let buttonWidth = 1;
 
-    if (h === 0 && startTime.mins > 0){
+    if (h === 0 && startTime.mins > 0) {
       const startMins = startTime.mins / 60;
       buttonWidth -= startMins;
-    }
-    else if (h === durationHours - 1 && endTime.mins > 0){
+    } else if (h === durationHours - 1 && endTime.mins > 0) {
       const endMins = endTime.mins / 60;
       buttonWidth += endMins;
     }
@@ -196,7 +185,7 @@ function fillItems(params) {
     let data = '';
 
     if (event) {
-      const eventDurationMs = endDateTime .valueOf() - startDateTime.valueOf();
+      const eventDurationMs = endDateTime.valueOf() - startDateTime.valueOf();
       const eventDurationHours = eventDurationMs / 1000 / 60 / 60;
       buttonWidth = eventDurationHours;
 
@@ -264,13 +253,6 @@ function sheduleToSlotsList (shedule) {
 
   for (let dayKey in shedule) {
     const day = shedule[dayKey];
-    const floors = [];
-    const dayClass = tools.addMods({
-      class: 'shedule__day',
-      mods: [dayKey],
-      isCurrent: dayKey === tools.todayDayKey
-    });
-
     sheduleSlotsList[dayKey] = [];
 
     for (let floorNum in day.floors) {
@@ -280,9 +262,8 @@ function sheduleToSlotsList (shedule) {
       });
 
       roomsList.forEach(room => {
-        sheduleSlotsList[dayKey] = sheduleSlotsList[dayKey].concat(room.slots)
+        sheduleSlotsList[dayKey] = sheduleSlotsList[dayKey].concat(room.slots);
       });
-
     }
   }
 
@@ -291,16 +272,16 @@ function sheduleToSlotsList (shedule) {
 
 // ------------------------------
 
-function getSheduleList(events, floors) {
-  const shedule = getShedule (events, floors);
+function getSheduleList (events, floors) {
+  const shedule = getShedule(events, floors);
 
   return sheduleToList(shedule);
 }
 
 // ------------------------------
 
-function getSlotsList(events, floors) {
-  const shedule = getShedule (events, floors);
+function getSlotsList (events, floors) {
+  const shedule = getShedule(events, floors);
 
   return sheduleToSlotsList(shedule);
 }

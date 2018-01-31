@@ -6,7 +6,6 @@ const mustache = require('mustache');
 const moment = require('moment');
 moment.locale('ru');
 const config = require('./config');
-const users = require('./users');
 
 const now = new Date();
 const daysList = getDaysList();

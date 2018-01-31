@@ -27,7 +27,7 @@
 
           <div class="form__group form__group--title">
             <label class="form__label" for="title">Тема</label>
-            <input class="form__input" type="text" name="title" id="title" placeholder="О чём будете говорить?">
+            <input class="form__input" type="text" name="title" id="title" placeholder="О чём будете говорить?" data-group=".form__group--title">
           </div>
 
           {{> select-datetime}}
@@ -37,7 +37,7 @@
           {{> select-room}}
         </div>
 
-        <button class="form__select-room-button" type="button">Выберите переговорку</button>
+        <div class="form__message"></div>
 
         <footer class="form__footer form__footer--create">
           <button
@@ -45,7 +45,7 @@
             name="action" value="cancel"
             >Отмена</button>
           <button
-            class="form__button form__button--create button button--blue"
+            class="form__button form__button--create button button--blue" type="submit"
             name="action" value="create"
             >Создать встречу</button>
         </footer>

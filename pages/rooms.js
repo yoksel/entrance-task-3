@@ -72,7 +72,7 @@ function fillRooms (data) {
       class: tools.addMods({
         class: 'form__group',
         mods: mods
-      }),
+      })
     },
     list: getRoomsData(rooms, roomId),
     mod: 'select-room--room-selected'
@@ -140,5 +140,5 @@ module.exports = {
   getRoomsData: getRoomsData,
   getRoomsByFloors: getRoomsByFloors,
   fillRooms: fillRooms,
-  sortByFloor: sortByFloor,
+  sortByFloor: sortByFloor
 };

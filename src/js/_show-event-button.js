@@ -12,10 +12,10 @@
     this.popup = {
       elem: document.querySelector('.popup--view-info'),
       classOpened: 'popup--opened',
-      classRotated: 'popup--rotated',
+      classRotated: 'popup--rotated'
     };
     this.popup.closePopup = function () {
-        this.popup.elem.classList.remove(this.popup.classOpened);
+      this.popup.elem.classList.remove(this.popup.classOpened);
     };
     this.popup.content = this.popup.elem.querySelector('.popup__content');
     this.arrow = this.popup.elem.querySelector('.popup__arrow');

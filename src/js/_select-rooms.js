@@ -1,5 +1,7 @@
 'use strict';
 
+/* global moment, Mustache, pageData, getTemplate */
+
 // ------------------------------
 // SELECT USERS
 // ------------------------------
@@ -8,7 +10,6 @@
   const SelectRoom = function (elem) {
     this.elem = elem;
     this.legend = elem.querySelector('.form__legend');
-    const items = elem.querySelectorAll('.select-room__item');
     this.list = elem.querySelector('.select-room__items');
     this.inputs = [];
     this.eventSwapEventElem = elem.querySelector('.select-room__swap-event');
@@ -21,28 +22,23 @@
     this.eventSwapTmpl = getTemplate(eventSwapTmplElem.outerHTML);
     this.recommendation = {};
 
-    this.elem.addEventListener('click', (even) => {
+    this.elem.addEventListener('click', (event) => {
       const target = event.target;
       const context = event.target.parentNode;
-
-      console.log('target', target);
 
       if (target.classList.contains('close-control')) {
         const input = context.querySelector('.select-room__input--room');
         input.checked = false;
         this.elem.classList.remove('select-room--room-selected');
-
-      }
-      else if (target.classList.contains('event-swap')) {
+      } else if (target.classList.contains('event-swap')) {
         this.saveSwap(target.dataset);
-      }
-      else {
+      } else {
         this.elem.classList.add('select-room--room-selected');
       }
     });
   };
 
-  SelectRoom.prototype.setRooms = function(recommendation, defaultRoom){
+  SelectRoom.prototype.setRooms = function (recommendation, defaultRoom) {
     this.recommendation = recommendation;
     const rooms = recommendation.rooms;
     const date = recommendation.date;
@@ -56,21 +52,24 @@
       return this.addVariant(data, this.eventRoomTmpl);
     });
 
-    this.list.innerHTML = roomsItems.join('');
+    if (recommendation.rooms.length > 0) {
+      this.list.innerHTML = roomsItems.join('');
+    }
 
-    this.group.classList.remove('form__group--hidden');
+    if (!defaultRoom && recommendation.rooms.length > 0) {
+      this.group.classList.remove('form__group--hidden');
+    }
 
     if (rooms.indexOf(defaultRoom) >= 0) {
       this.elem.classList.add('select-room--room-selected');
       this.legend.innerHTML = 'Ваша переговорка';
-    }
-    else {
+    } else {
       this.elem.classList.remove('select-room--room-selected');
       this.legend.innerHTML = 'Рекомендованные переговорки';
     }
-  }
+  };
 
-  SelectRoom.prototype.showSwaps = function(recommendation){
+  SelectRoom.prototype.showSwaps = function (recommendation) {
     const swaps = recommendation.swaps;
     this.recommendation = recommendation;
 
@@ -91,14 +90,14 @@
           id: roomTo.id,
           title: roomTo.title,
           floor: roomTo.floor
-        },
+        }
       };
 
       return this.addVariant(data, this.eventSwapTmpl);
     });
 
     this.list.innerHTML = swapsItems.join('');
-  }
+  };
 
   SelectRoom.prototype.saveSwap = function (dataSet) {
     this.eventSwapEventElem.value = dataSet.swapEvent;
@@ -132,6 +131,4 @@
     const selectRoom = new SelectRoom(selectRoomElem);
     window.selectRoom = selectRoom;
   }
-
-
 }(window));

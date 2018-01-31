@@ -12,7 +12,9 @@
         type="text"
         name="date"
         id="date"
-        value="{{event.date}}">
+        value="{{event.date}}"
+        data-group=".form__group--datetime"
+        >
       <button class="form__dropdown-control dropdown-control calendar-control" type="button">
         <svg class="dropdown-control__icon dropdown-control__icon--calendar">
           <use xlink:href="#calendar"/>
@@ -25,7 +27,7 @@
   </div>
   <div class="form__period select-datetime__period">
     <div class="form__period-item">
-      <label class="form__label" for="date">Начало</label>
+      <label class="form__label" for="timeFrom">Начало</label>
       <input
         class="form__input form__input--timefrom select-datetime__time select-datetime__time--from"
         type="time"
@@ -34,12 +36,12 @@
         value="{{event.timeStart}}"
         placeholder="--:--"
         pattern="[0-9]{2}:[0-9]{2}"
-        required
+        data-group=".form__group--datetime"
         >
     </div>
     <span class="form__dash">&mdash;</span>
     <div class="form__period-item">
-      <label class="form__label" for="date">Конец</label>
+      <label class="form__label" for="timeTo">Конец</label>
       <input
         class="form__input form__input--timeto select-datetime__time select-datetime__time--to"
         type="time"
@@ -48,7 +50,7 @@
         value="{{event.timeEnd}}"
         placeholder="--:--"
         pattern="[0-9]{2}:[0-9]{2}"
-        required
+        data-group=".form__group--datetime"
         >
     </div>
   </div>

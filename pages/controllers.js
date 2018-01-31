@@ -10,7 +10,6 @@ const config = require('./config');
 const tools = require('./tools');
 const events = require('./events');
 const rooms = require('./rooms');
-const users = require('./users');
 const shedule = require('./shedule');
 const pageData = {
   events: {}
@@ -24,12 +23,8 @@ let pageReqBody = null;
 // ------------------------------
 
 function handleRequest (req, res) {
-  console.log('handleRequest()');
   pageResponse = res;
   pageReqBody = req.body;
-
-  console.log('PAGEREQBODY');
-  console.log(pageReqBody);
 
   query.events()
     .then(response => {
@@ -40,11 +35,9 @@ function handleRequest (req, res) {
       if (pageReqBody.action === 'create') {
         if (matches.byDateRoom > 0) {
           // Room & date match
-          console.log('Room & date match');
           if (pageReqBody.swapEvent) {
             swapEvent();
-          }
-          else {
+          } else {
             getPage();
           }
         } else {
@@ -54,8 +47,7 @@ function handleRequest (req, res) {
         removeEvent();
       } else if (pageReqBody.action === 'update') {
         updateEvent();
-      }
-      else {
+      } else {
         // Unhandled action
         getPage();
       }
@@ -63,13 +55,12 @@ function handleRequest (req, res) {
     .catch((error) => {
       console.log('\nPromises in handleRequest() failed:');
       console.log(error);
-    });;
+    });
 }
 
 // ------------------------------
 
 function getPage () {
-
   const dataProms = [
     query.events(),
     query.rooms(),
@@ -78,33 +69,33 @@ function getPage () {
 
   Promise.all(dataProms)
     .then(response => {
-        data.events = response[0];
-        data.rooms = response[1].sort(rooms.sortByFloor);
-        data.floors = rooms.getRoomsByFloors(data.rooms);
-        data.shedule = shedule.getSheduleList({
-          events: data.events,
-          floors: data.floors,
-          isHasItems: true
-        });
-        data.users = response[2];
+      data.events = response[0];
+      data.rooms = response[1].sort(rooms.sortByFloor);
+      data.floors = rooms.getRoomsByFloors(data.rooms);
+      data.shedule = shedule.getSheduleList({
+        events: data.events,
+        floors: data.floors,
+        isHasItems: true
+      });
+      data.users = response[2];
 
-        const partialsProms = [
-          tools.getDaysNav(),
-          rooms.getList(data.floors.list),
-          tools.getHoursNav(),
-          tools.getPopupCalendar()
-        ];
+      const partialsProms = [
+        tools.getDaysNav(),
+        rooms.getList(data.floors.list),
+        tools.getHoursNav(),
+        tools.getPopupCalendar()
+      ];
 
-        return Promise.all(partialsProms);
-      })
+      return Promise.all(partialsProms);
+    })
     .then(response => {
-        partials.daysNav = response[0];
-        partials.roomsList = response[1];
-        partials.hoursNav = response[2];
-        partials.popupCalendar = response[3];
+      partials.daysNav = response[0];
+      partials.roomsList = response[1];
+      partials.hoursNav = response[2];
+      partials.popupCalendar = response[3];
 
-        renderPage ();
-      })
+      renderPage();
+    })
     .catch((error) => {
       console.log('\nPromises in getPage() failed:');
       console.log(error);
@@ -113,63 +104,40 @@ function getPage () {
 
 // ------------------------------
 
-function swapEvent() {
-  console.log('SWAPROOMS pageReqBody');
-  console.log(pageReqBody);
-
-
-  // swapEvent: '18',
-  // swapFromRoom: '3',
-  // swapToRoom: '4',
-
+function swapEvent () {
   // Move event
-  mutation.createEvent(global, {
+  mutation.changeEventRoom(global, {
     id: pageReqBody.swapEvent,
     roomId: pageReqBody.swapToRoom
   })
     .then(response => {
-        console.log('\nEvent moved()');
-
         // Update/create second event
-        if (pageReqBody.itemid) {
-          updateEvent ();
-        }
-        else {
-          createEvent();
-        }
-        getPage ();
-      })
+      if (pageReqBody.itemid) {
+        updateEvent();
+      } else {
+        createEvent();
+      }
+    })
     .catch((e) => {
-      console.log('\ncreateEvent failed: ');
+      console.log('\nwapEvent failed: ');
       console.log(e);
-      getPage ();
+      getPage();
     });
 }
 
 // ------------------------------
 
 function createEvent () {
-  console.log('\ncreateEvent()');
-
-  console.log('PAGEREQBODY');
-  console.log(pageReqBody);
-
-  if(!pageReqBody.title || pageReqBody.usersIds.length == 0 || !pageReqBody.roomId) {
-    console.log('NOT all data exist');
+  if (!pageReqBody.title || pageReqBody.usersIds.length === 0 || !pageReqBody.roomId) {
     // No data for event, event NOT created
-    getPage ();
+    getPage();
     return;
   }
-
-  console.log('all data exist');
 
   const dateTimeStart = moment(pageReqBody.daycode);
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
   const usersIds = tools.getUsersFromRequest(pageReqBody);
-
-  console.log('USERSIDS');
-  console.log(usersIds);
 
   mutation.createEvent(global, {
     input: {
@@ -181,15 +149,10 @@ function createEvent () {
     roomId: pageReqBody.roomId
   })
     .then(response => {
-        console.log('\nEvent created()');
-        console.log('response');
-        console.log(response.users);
-        getPage ();
-      })
+      getPage();
+    })
     .catch((e) => {
-      console.log('\ncreateEvent failed: ');
-      console.log(e);
-      getPage ();
+      getPage();
     });
 }
 
@@ -212,12 +175,10 @@ function updateEvent () {
     roomId: pageReqBody.roomid
   })
     .then(response => {
-      getPage ();
-      })
+      getPage();
+    })
     .catch((e) => {
-      console.log('\nupdateEvent failed: ');
-      console.log(e);
-      getPage ();
+      getPage();
     });
 }
 
@@ -229,12 +190,10 @@ function removeEvent () {
       { id: pageReqBody.itemid }
     )
     .then(response => {
-        getPage ();
-      })
+      getPage();
+    })
     .catch((e) => {
-      console.log('\nremoveEvent() failed');
-      console.log(e);
-      getPage ();
+      getPage();
     });
 }
 

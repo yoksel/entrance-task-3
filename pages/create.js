@@ -21,9 +21,6 @@ function getPage (req, res) {
   pageResponse = res;
   pageQuery = req.query;
 
-  console.log('CREATE REQ.QUERY');
-  console.log(pageQuery);
-
   data.event = fillData();
 
   const dataProms = [
@@ -36,32 +33,32 @@ function getPage (req, res) {
     tools.getPopupCalendar(),
     tools.getPageTmpl('_event-user'),
     tools.getPageTmpl('_select-room-item'),
-    tools.getPageTmpl('_select-room-swapitem'),
+    tools.getPageTmpl('_select-room-swapitem')
   ];
 
   Promise.all(dataProms)
     .then(response => {
-        data.events = response[0];
-        data.rooms = response[1].sort(rooms.sortByFloor);
-        data.floors = rooms.getRoomsByFloors(data.rooms);
-        data.users = response[2];
+      data.events = response[0];
+      data.rooms = response[1].sort(rooms.sortByFloor);
+      data.floors = rooms.getRoomsByFloors(data.rooms);
+      data.users = response[2];
 
-        data.slots = shedule.getSlotsList({
-          events: data.events,
-          floors: data.floors,
-          isHasItems: false
-        });
+      data.slots = shedule.getSlotsList({
+        events: data.events,
+        floors: data.floors,
+        isHasItems: false
+      });
 
-        return Promise.all(partialsProms);
-      })
+      return Promise.all(partialsProms);
+    })
     .then(response => {
-        partials.popupCalendar = response[0];
-        partials.eventUserTmpl = response[1];
-        partials.eventRoomTmpl = response[2];
-        partials.eventSwapTmpl = response[3];
+      partials.popupCalendar = response[0];
+      partials.eventUserTmpl = response[1];
+      partials.eventRoomTmpl = response[2];
+      partials.eventSwapTmpl = response[3];
 
-        renderPage();
-      })
+      renderPage();
+    })
     .catch((error) => {
       console.log('\nPromises in getPage() failed:');
       console.log(error);
@@ -101,7 +98,7 @@ function renderPage () {
   pageData.rooms = rooms.getPageData(data.rooms);
   let legendText = 'Рекомендованные переговорки';
 
-  if(pageQuery.roomId) {
+  if (pageQuery.roomId) {
     legendText = 'Ваша переговорка';
   }
 
