@@ -11,6 +11,9 @@
   const usersTextInput = form.querySelector('.select-users__input--text');
   const messageElem = form.querySelector('.form__message');
   const messageTextElem = form.querySelector('.form__message-text');
+  const buttonRemove = form.querySelector('.form__button--remove');
+
+  // ------------------------------
 
   form.addEventListener('submit', (event) => {
     const messageTextInputs = checkTextInputs();
@@ -40,6 +43,8 @@
     }
   });
 
+  // ------------------------------
+
   function checkUsersInputs () {
     usersInputs.some = [].some;
     const groupClass = usersInputs[0].dataset.group;
@@ -63,6 +68,8 @@
       return message;
     }
   }
+
+  // ------------------------------
 
   function checkRoomsInputs () {
     const roomsInputs = form.querySelectorAll('input[name="roomId"]');
@@ -100,6 +107,8 @@
       return message;
     }
   }
+
+  // ------------------------------
 
   function checkTextInputs () {
     for (let i = 0; i < textInputs.length; i++) {
