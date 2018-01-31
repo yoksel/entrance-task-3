@@ -14,6 +14,7 @@
 .close-control__icon {
   width: 9px;
   height: 9px;
+  flex-shrink: 0;
   fill: #AFB4B8;
   pointer-events: none;
 }
