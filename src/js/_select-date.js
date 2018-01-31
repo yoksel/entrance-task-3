@@ -6,7 +6,7 @@
 // SELECT DATE
 // ------------------------------
 
-(function () {
+(function (window) {
   const SelectDate = function (elem) {
     const buttons = elem.querySelectorAll('.calendar__button');
     this.input = elem.querySelector('.select-datetime__input');
@@ -39,6 +39,8 @@
     });
   };
 
+  // ------------------------------
+
   SelectDate.prototype.getDateFromTime = function (timeInputValue) {
     const timeSrc = this.dayCodeInput.value;
     let date = moment(timeSrc);
@@ -53,6 +55,8 @@
     return newDate;
   };
 
+  // ------------------------------
+
   SelectDate.prototype.setDate = function (date) {
     moment.locale('ru');
     this.dayCodeInput.value = date;
@@ -60,6 +64,20 @@
     this.input.value = dateShow;
     closePopups();
   };
+
+  // ------------------------------
+
+  SelectDate.prototype.getFormDate = function () {
+    const timeFrom = this.getDateFromTime(this.timeFromInput.value).toISOString();
+    const timeTo = this.getDateFromTime(this.timeToInput.value).toISOString();
+
+    return {
+      dateFrom: timeFrom,
+      dateTo: timeTo,
+    };
+  };
+
+  // ------------------------------
 
   SelectDate.prototype.validateTime = function () {
     const timeFrom = this.getDateFromTime(this.timeFromInput.value).toISOString();
@@ -77,15 +95,19 @@
     }
   };
 
+  // ------------------------------
+
   SelectDate.prototype.openPopup = function (event) {
     event.stopPropagation();
     closePopups(this.calendarPopup);
     this.calendarPopup.classList.toggle('popup--opened');
   };
 
-  const selectDates = document.querySelectorAll('.select-datetime');
+  // ------------------------------
 
-  selectDates.forEach(item => {
-    const selectDate = new SelectDate(item);
-  });
-}());
+  const selectDateElem = document.querySelector('.select-datetime');
+  const selectDate = new SelectDate(selectDateElem);
+
+  window.selectDate = selectDate;
+
+}(window));
