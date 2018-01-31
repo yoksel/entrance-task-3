@@ -3,6 +3,9 @@ $form-maxwidth-tablet: 600px;
 
 .form {
   margin-top: 25px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .form__inner {
@@ -218,8 +221,15 @@ $form-maxwidth-tablet: 600px;
   }
 
   @media(min-width: $bp-tablet) {
-    position: relative;
-    bottom: 0;
+    position: static;
+  }
+}
+
+.form__message-text {
+  @media(min-width: $bp-desktop) {
+    width: 870px;
+    margin-right: auto;
+    margin-left: auto;
   }
 }
 
@@ -231,6 +241,15 @@ $form-maxwidth-tablet: 600px;
   min-height: 80px;
   position: sticky;
   bottom: 0;
+  margin-top: auto;
+
+  @media(min-width: $bp-desktop) {
+    margin-top: 0;
+    position: static;
+  }
+}
+
+.form__footer-content {
   padding: 20px 0;
   box-sizing: border-box;
   display: flex;
@@ -244,16 +263,12 @@ $form-maxwidth-tablet: 600px;
     padding-top: 0;
 
     @media(min-width: $bp-tablet) {
-      margin-top: 0;
       padding-top: 20px;
     }
   }
 
-  @media(min-width: $bp-tablet) {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+
+  @media(min-width: $bp-desktop) {
     height: 75px;
     border-top: 1px solid $color-smoke;
     box-shadow: none;

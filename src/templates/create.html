@@ -37,17 +37,22 @@
           {{> select-room}}
         </div>
 
-        <div class="form__message form__message--create"></div>
 
         <footer class="form__footer form__footer--create">
-          <button
-            class="form__button form__button--cancel button"
-            name="action" value="cancel"
-            >Отмена</button>
-          <button
-            class="form__button form__button--create button button--blue" type="submit"
-            name="action" value="create"
-            >Создать встречу</button>
+          <div class="form__message form__message--create">
+            <div class="form__message-text"></div>
+          </div>
+
+          <div class="form__footer-content form__footer-content--create">
+            <button
+              class="form__button form__button--cancel button"
+              name="action" value="cancel"
+              >Отмена</button>
+            <button
+              class="form__button form__button--create button button--blue" type="submit"
+              name="action" value="create"
+              >Создать встречу</button>
+          </div>
         </footer>
       </form>
     </main>

@@ -10,13 +10,14 @@
   const usersInputs = form.querySelectorAll('input[name="usersIds"]');
   const usersTextInput = form.querySelector('.select-users__input--text');
   const messageElem = form.querySelector('.form__message');
+  const messageTextElem = form.querySelector('.form__message-text');
 
   form.addEventListener('submit', (event) => {
     const messageTextInputs = checkTextInputs();
 
     if (messageTextInputs) {
       event.preventDefault();
-      messageElem.innerHTML = messageTextInputs;
+      messageTextElem.innerHTML = messageTextInputs;
       messageElem.classList.add('form__message--shown');
       return;
     }
@@ -25,7 +26,7 @@
 
     if (messageUsersInputs) {
       event.preventDefault();
-      messageElem.innerHTML = messageUsersInputs;
+      messageTextElem.innerHTML = messageUsersInputs;
       messageElem.classList.add('form__message--shown');
       return;
     }
@@ -34,7 +35,7 @@
 
     if (messageRoomsInputs) {
       event.preventDefault();
-      messageElem.innerHTML = messageRoomsInputs;
+      messageTextElem.innerHTML = messageRoomsInputs;
       messageElem.classList.add('form__message--shown');
     }
   });
