@@ -46,6 +46,24 @@
     popupViewInfo.arrow = popupViewInfo.elem.querySelector('.popup__arrow');
   }
 
+  // ------------------------------
+
+  const buttonsOk = document.querySelectorAll('.popup__button--ok');
+
+  if (buttonsOk.length > 0) {
+
+    buttonsOk.forEach(button => {
+      button.addEventListener('click', () => {
+        const bodyClass = button.dataset.bodyclass;
+        if (bodyClass) {
+          document.body.classList.remove(bodyClass);
+        }
+      });
+    });
+  }
+
+  // ------------------------------
+
   function chageClassOnScroll () {
     popupViewInfo.closePopup();
 

@@ -1,15 +1,17 @@
-<div class="popup-fader">
+<div class="popup-fader popup-fader--event-created">
   <div class="popup popup--event-created">
     <div class="popup__content">
       <h5 class="popup__title">Встреча создана</h5>
 
-      <p class="popup__text">
-        14 декабря, 15:00—17:00<br>
-        Готем · 4 этаж
-      </p>
+      <div class="popup__text event event--created">
+        <h6 class="event__title event__title--created">{{event.title}}</h6>
+
+        {{{event.date}}}<br>
+        {{event.roomTitle}} &bull; {{event.roomFloor}} этаж
+      </div>
 
       <footer class="popup__buttons">
-        <button class="popup__button popup__button--ok button button--blue">Хорошо</button>
+        <button class="popup__button popup__button--ok button button--blue" type="button" data-bodyclass="page--event-created">Хорошо</button>
       </footer>
     </div>
   </div>

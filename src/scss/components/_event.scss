@@ -12,10 +12,18 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 
+  &--created {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding-right: 0;
+    font-size: 16px;
+  }
+
   @media(min-width: $bp-desktop) {
     margin-bottom: 2px;
     font-size: 15px;
   }
+
 }
 .event__datetime {
   margin-bottom: 8px;

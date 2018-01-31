@@ -8,7 +8,7 @@
     <title>Яндекс Переговорки</title>
 </head>
 
-<body class="page page--index">
+<body class="page page--index {{pageMod}}">
   <div style="display: none">
     {{> symbols }}
   </div>
@@ -22,8 +22,9 @@
 
   </main>
 
-  {{> popup--event-created }}
   {{> popup--view-info }}
+
+  {{> popup--event-created}}
 
   <script>
     const pageData = {{{pageData}}};

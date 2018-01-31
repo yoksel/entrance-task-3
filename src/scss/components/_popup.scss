@@ -11,10 +11,6 @@
   align-items: flex-end;
   background: rgba(0,16,33,0.40);
 
-  .page--popup-opened & {
-    display: flex;
-  }
-
   .popup {
     display: block;
     position: static;
@@ -28,6 +24,10 @@
     align-items: center;
     padding-bottom: 0;
   }
+}
+
+.page--event-created .popup-fader--event-created {
+  display: flex;
 }
 
 .popup {

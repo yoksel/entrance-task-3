@@ -149,6 +149,7 @@ function createEvent () {
     roomId: pageReqBody.roomId
   })
     .then(response => {
+      data.evenCreatedtId = response.dataValues.id;
       getPage();
     })
     .catch((e) => {
@@ -201,10 +202,15 @@ function removeEvent () {
 
 function renderPage () {
   pageData.events = events.getPageData(data.events);
+  if(data.evenCreatedtId) {
+    data.event = pageData.events[data.evenCreatedtId];
+    data.pageMod = 'page--event-created';
+  }
 
   pageResponse.render(
     'index',
     {
+      event: data.event,
       days: tools.daysList,
       rooms: partials.roomsList,
       hours: config.hoursInDay,
@@ -212,6 +218,7 @@ function renderPage () {
       sheduleDays: data.shedule,
       popupCalendar: partials.popupCalendar,
       pageData: JSON.stringify(pageData),
+      pageMod: data.pageMod,
       partials: {
         'symbols': 'components/_symbols',
         'page-header': 'components/_page-header',

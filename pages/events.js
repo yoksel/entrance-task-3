@@ -13,6 +13,7 @@ function getPageData (eventsData) {
         title: event.title,
         roomId: event.room.id,
         roomTitle: event.room.title,
+        roomFloor: event.room.floor,
         date: tools.prettyDate(event),
         dateSrc: {
           start: event.dateStart,
