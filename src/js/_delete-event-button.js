@@ -5,7 +5,6 @@
 // ------------------------------
 
 (function () {
-
   const formButtonRemove = document.querySelector('.form__button--remove');
   const popupButtonRemove = document.querySelector('.popup__button--remove');
   const popupButtonCancel = document.querySelector('.popup__button--cancel');

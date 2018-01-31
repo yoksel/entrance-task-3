@@ -97,6 +97,7 @@
     });
 
     this.list.innerHTML = swapsItems.join('');
+    this.legend.innerHTML = 'Рекомендованные перестановки';
   };
 
   SelectRoom.prototype.saveSwap = function (dataSet) {

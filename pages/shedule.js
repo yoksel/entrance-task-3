@@ -48,7 +48,8 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
       const room = floor.rooms[roomId];
       const capacity = room.capacity;
       room.slots = [];
-      let startTime = moment(day.code).hours(config.startHour);
+      const dayStart = moment(day.code).hours(config.startHour);
+      let startTime = dayStart.clone();
       let endTime = moment(day.code).hours(config.lastHour);
 
       hours.forEach(hour => {
@@ -155,6 +156,11 @@ function fillItems (params) {
   // Quantity of buttons
   let itemsQuantity = durationHours;
 
+  // Fix empty start of the day
+  if (itemsQuantity === 0 && startDateTime.toISOString() !== endDateTime.toISOString()) {
+    itemsQuantity = 1;
+  }
+
   if (event) {
     // Long button
     itemsQuantity = 1;
@@ -170,6 +176,9 @@ function fillItems (params) {
     } else if (h === durationHours - 1 && endTime.mins > 0) {
       const endMins = endTime.mins / 60;
       buttonWidth += endMins;
+    } else if (startTime.hours === endTime.hours && endTime.mins > startTime.mins) {
+      const diff = (endTime.mins - startTime.mins) / 60;
+      buttonWidth -= diff;
     }
 
     const dateTime = moment(startDateTime).add(h, 'h');
