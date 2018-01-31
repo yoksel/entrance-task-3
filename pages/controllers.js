@@ -202,7 +202,7 @@ function removeEvent () {
 
 function renderPage () {
   pageData.events = events.getPageData(data.events);
-  if(data.evenCreatedtId) {
+  if (data.evenCreatedtId) {
     data.event = pageData.events[data.evenCreatedtId];
     data.pageMod = 'page--event-created';
   }

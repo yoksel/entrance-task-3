@@ -51,7 +51,6 @@
   const buttonsOk = document.querySelectorAll('.popup__button--ok');
 
   if (buttonsOk.length > 0) {
-
     buttonsOk.forEach(button => {
       button.addEventListener('click', () => {
         const bodyClass = button.dataset.bodyclass;
@@ -67,7 +66,6 @@
   const popupFader = document.querySelectorAll('.popup-fader');
 
   if (popupFader.length > 0) {
-
     popupFader.forEach(fader => {
       fader.addEventListener('click', () => {
         const bodyClass = fader.dataset.bodyclass;
