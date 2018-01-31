@@ -64,6 +64,22 @@
 
   // ------------------------------
 
+  const popupFader = document.querySelectorAll('.popup-fader');
+
+  if (popupFader.length > 0) {
+
+    popupFader.forEach(fader => {
+      fader.addEventListener('click', () => {
+        const bodyClass = fader.dataset.bodyclass;
+        if (bodyClass) {
+          document.body.classList.remove(bodyClass);
+        }
+      });
+    });
+  }
+
+  // ------------------------------
+
   function chageClassOnScroll () {
     popupViewInfo.closePopup();
 
