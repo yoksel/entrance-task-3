@@ -1,8 +1,8 @@
 <li class="select-room__item select-room__item--swap">
   <input class="select-room__input select-room__input--swap select-room__input--radio visuallyhidden" type="radio" name="swapId" id="swap--{{id}}" value="{{id}}">
   <label class="select-room__label select-room__label--swap" for="room--{{id}}">
-    <div class="event-swap" data-swap-event="{{event.id}}" data-swap-to-room="{{to.id}}" data-swap-from-room="{{from.id}}">
-      <time class="event-swap__time">{{event.timeStart}}—{{event.timeEnd}}</time>
+    <span class="event-swap" data-swap-event="{{event.id}}" data-swap-to-room="{{to.id}}" data-swap-from-room="{{from.id}}">
+      <span class="event-swap__time">{{event.timeStart}}—{{event.timeEnd}}</span>
       <span class="event-swap__title">{{event.title}}</span>
       <span class="event-swap__from-to">
         <span class="event-swap__room">
@@ -11,12 +11,12 @@
         <span class="event-swap__room">
           <strong>{{to.title}}</strong> · {{to.floor}} этаж</span>
       </span>
-    </div>
+    </span>
   </label>
 
-  <buton class="close-control select-room__close-control">
+  <button class="close-control select-room__close-control" type="button">
     <svg class="close-control__icon">
       <use xlink:href="#close"/>
     </svg>
-  </buton>
+  </button>
 </li>

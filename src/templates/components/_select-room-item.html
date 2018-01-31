@@ -2,13 +2,13 @@
   <input class="select-room__input select-room__input--room select-room__input--radio visuallyhidden" type="radio" name="roomId" id="room--{{id}}" value="{{id}}" {{checked}}
   data-group=".form__group--rooms">
   <label class="select-room__label" for="room--{{id}}">
-    <time class="select-room__time">{{event.timeStart}}—{{event.timeEnd}}</time>
+    <span class="select-room__time">{{event.timeStart}}—{{event.timeEnd}}</span>
     <span class="select-room__room">{{title}} · {{floor}} этаж</span>
   </label>
 
-  <buton class="close-control select-room__close-control">
+  <button class="close-control select-room__close-control" type="button">
     <svg class="close-control__icon">
       <use xlink:href="#close"/>
     </svg>
-  </buton>
+  </button>
 </li>
