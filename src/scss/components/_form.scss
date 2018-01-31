@@ -61,7 +61,7 @@ $form-maxwidth-tablet: 600px;
   &--warning {
     border-color: tomato;
 
-    @media(min-width: $bp-tablet) {
+    @media(min-width: $bp-desktop) {
       &::after {
         content: "";
         display: block;
