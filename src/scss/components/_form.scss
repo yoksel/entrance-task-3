@@ -72,10 +72,6 @@ $form-maxwidth-tablet: 600px;
     }
   }
 
-  &--warning {
-    border-color: tomato;
-  }
-
   @media(min-width: $bp-tablet) {
     max-width: $form-maxwidth-tablet;
   }
@@ -212,6 +208,10 @@ $form-maxwidth-tablet: 600px;
   background: rgba(0,16,33,.80);
   text-align: left;
   color: #FFF;
+
+  &--edit {
+    bottom: 146px;
+  }
 
   &--shown {
     display: block;

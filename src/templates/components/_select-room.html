@@ -1,16 +1,14 @@
-<fieldset class="{{rooms.group.class}}">
-  <div class="select-room {{rooms.mod}}">
+<fieldset class="{{rooms.group.class}} select-room {{rooms.mod}}">
+  <legend class="form__legend">{{rooms.group.title}}</legend>
 
-    <legend class="form__legend">{{rooms.group.title}}</legend>
-    <input class="select-room__default" type="hidden" name="default-room" value="{{rooms.default}}">
-    <input type="hidden" name="swapEvent" class="select-room__swap-event">
-    <input type="hidden" name="swapFromRoom" class="select-room__swap-from-room">
-    <input type="hidden" name="swapToRoom" class="select-room__swap-to-room">
+  <input class="select-room__default" type="hidden" name="default-room" value="{{rooms.default}}">
+  <input type="hidden" name="swapEvent" class="select-room__swap-event">
+  <input type="hidden" name="swapFromRoom" class="select-room__swap-from-room">
+  <input type="hidden" name="swapToRoom" class="select-room__swap-to-room">
 
-    <ul class="select-room__items">
-      {{#rooms.list}}
-        {{> select-room-item}}
-      {{/rooms.list}}
-    </ul>
-  </div>
+  <ul class="select-room__items">
+    {{#rooms.list}}
+      {{> select-room-item}}
+    {{/rooms.list}}
+  </ul>
 </fieldset>
