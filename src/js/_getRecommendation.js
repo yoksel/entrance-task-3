@@ -42,46 +42,6 @@
 
   // ------------------------------
 
-  function checkUsers (date, members, db) {
-    const dateStart = moment(date.start);
-    const dateStartIso = dateStart.toISOString();
-    const dateEnd = moment(date.end);
-    const dateEndIso = dateEnd.toISOString();
-    const dayKey = dateStart.locale('en').format('D-MMM');
-    const slots = db.slots[dayKey];
-    const eventId = eventIdElem ? eventIdElem.value : null;
-    let foundedUsers = [];
-
-    const membersList = members.map(member => {
-      return member.id;
-    });
-
-    slots.forEach(slot => {
-      if (slot.event && slot.event.id !== +eventId) {
-        // Has bug here, can't check multy users on the same time events
-        if ((dateStartIso <= slot.start && dateEndIso >= slot.start && dateEndIso <= slot.end) ||
-            (dateStartIso >= slot.start && dateStartIso <= slot.end && dateEndIso >= slot.end)) {
-          const usersList = Object.values(slot.users);
-
-          const filtered = usersList.filter(user => {
-            if (membersList.indexOf(user.id) >= 0) {
-              return user;
-            }
-          });
-          foundedUsers = foundedUsers.concat(filtered);
-        }
-      }
-    });
-
-    const foundedIdList = foundedUsers.map(user => {
-      return user.id;
-    });
-
-    return foundedIdList;
-  }
-
-  // ------------------------------
-
   function addListeners () {
     if (!dayCode) {
       return;
@@ -116,8 +76,6 @@
       selectRoom.showSwaps(recommendation);
     }
 
-    const checkedUsers = checkUsers(data.date, data.members, data.db);
-    selectUser.highlightUsers(checkedUsers);
   }
 
   // ------------------------------
@@ -172,6 +130,10 @@
   function chooseRoom (dateIso, slots, members, rooms) {
     const nearest = [];
     const foundedSlots = [];
+
+    if (!slots) {
+      return nearest;
+    }
 
     slots.forEach(slot => {
       if (!slot.event) {

@@ -60,8 +60,11 @@
   SelectDate.prototype.setDate = function (date) {
     moment.locale('ru');
     this.dayCodeInput.value = date;
+
     const dateShow = moment(date).format('D MMMM');
     this.input.value = dateShow;
+
+    selectUser.checkUsers();
     closePopups();
   };
 
@@ -72,8 +75,8 @@
     const timeTo = this.getDateFromTime(this.timeToInput.value).toISOString();
 
     return {
-      dateFrom: timeFrom,
-      dateTo: timeTo,
+      start: timeFrom,
+      end: timeTo
     };
   };
 
@@ -106,8 +109,11 @@
   // ------------------------------
 
   const selectDateElem = document.querySelector('.select-datetime');
-  const selectDate = new SelectDate(selectDateElem);
 
-  window.selectDate = selectDate;
+  if(selectDateElem) {
+    const selectDate = new SelectDate(selectDateElem);
+    window.selectDate = selectDate;
+  }
+
 
 }(window));

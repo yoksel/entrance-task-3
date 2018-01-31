@@ -78,7 +78,7 @@
     background: $color-darksmoke;
   }
 
-  &--highlighted::after {
+  &--highlighted .user__pic {
     @include highlight;
   }
 }
@@ -90,6 +90,13 @@
 .select-users__input:checked + .select-users__label {
   background: #F6F7F9;
   font-weight: bold;
+}
+
+.select-users__input:disabled + .select-users__label,
+.select-users__input:disabled:hover + .select-users__label {
+  background: none;
+  opacity: .5;
+  cursor: default;
 }
 
 .select-users__results {
@@ -108,7 +115,6 @@
   background: $color-smoke;
   border: none;
   border-radius: 16px;
-  overflow: hidden;
   cursor: pointer;
 
   /* glass */
@@ -137,7 +143,7 @@
     margin-right: 7px;
   }
 
-  &--highlighted::after {
+  &--highlighted .user__pic {
     @include highlight;
   }
 }

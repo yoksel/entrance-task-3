@@ -58,6 +58,22 @@ $form-maxwidth-tablet: 600px;
     display: none;
   }
 
+  &--warning {
+    border-color: tomato;
+
+    @media(min-width: $bp-tablet) {
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 4px;
+        margin-top: 6px;
+        background: tomato;
+      }
+    }
+  }
+
   &--rooms,
   &--subject {
     border-bottom: 0;
