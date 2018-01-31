@@ -30,6 +30,10 @@
     font-size: 13px;
     padding: 12px;
   }
+
+  &--swap {
+    background: #c2e874;
+  }
 }
 
 .select-room__input:checked + .select-room__label {

@@ -48,6 +48,7 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
 
     for (let roomId in floor.rooms) {
       const room = floor.rooms[roomId];
+      const capacity = room.capacity;
       // console.log('\n-- ROOM:', roomId, room.title);
       room.slots = [];
       let date = moment(day.code);
@@ -91,6 +92,7 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
               event: event,
               users: event.users,
               room: roomId,
+              swapReady: capacity > event.users.length,
               items: fillItems({
                 start: eventStartTime,
                 end: eventEndTime,

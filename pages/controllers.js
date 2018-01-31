@@ -24,8 +24,12 @@ let pageReqBody = null;
 // ------------------------------
 
 function handleRequest (req, res) {
+  console.log('handleRequest()');
   pageResponse = res;
   pageReqBody = req.body;
+
+  console.log('PAGEREQBODY');
+  console.log(pageReqBody);
 
   query.events()
     .then(response => {
@@ -37,7 +41,12 @@ function handleRequest (req, res) {
         if (matches.byDateRoom > 0) {
           // Room & date match
           console.log('Room & date match');
-          getPage();
+          if (pageReqBody.swapEvent) {
+            swapEvent();
+          }
+          else {
+            getPage();
+          }
         } else {
           createEvent();
         }
@@ -104,18 +113,63 @@ function getPage () {
 
 // ------------------------------
 
+function swapEvent() {
+  console.log('SWAPROOMS pageReqBody');
+  console.log(pageReqBody);
+
+
+  // swapEvent: '18',
+  // swapFromRoom: '3',
+  // swapToRoom: '4',
+
+  // Move event
+  mutation.createEvent(global, {
+    id: pageReqBody.swapEvent,
+    roomId: pageReqBody.swapToRoom
+  })
+    .then(response => {
+        console.log('\nEvent moved()');
+
+        // Update/create second event
+        if (pageReqBody.itemid) {
+          updateEvent ();
+        }
+        else {
+          createEvent();
+        }
+        getPage ();
+      })
+    .catch((e) => {
+      console.log('\ncreateEvent failed: ');
+      console.log(e);
+      getPage ();
+    });
+}
+
+// ------------------------------
+
 function createEvent () {
   console.log('\ncreateEvent()');
+
+  console.log('PAGEREQBODY');
+  console.log(pageReqBody);
+
   if(!pageReqBody.title || pageReqBody.usersIds.length == 0 || !pageReqBody.roomId) {
+    console.log('NOT all data exist');
     // No data for event, event NOT created
     getPage ();
     return;
   }
 
+  console.log('all data exist');
+
   const dateTimeStart = moment(pageReqBody.daycode);
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
   const usersIds = tools.getUsersFromRequest(pageReqBody);
+
+  console.log('USERSIDS');
+  console.log(usersIds);
 
   mutation.createEvent(global, {
     input: {
@@ -128,11 +182,14 @@ function createEvent () {
   })
     .then(response => {
         console.log('\nEvent created()');
+        console.log('response');
+        console.log(response.users);
         getPage ();
       })
     .catch((e) => {
       console.log('\ncreateEvent failed: ');
       console.log(e);
+      getPage ();
     });
 }
 
@@ -160,6 +217,7 @@ function updateEvent () {
     .catch((e) => {
       console.log('\nupdateEvent failed: ');
       console.log(e);
+      getPage ();
     });
 }
 

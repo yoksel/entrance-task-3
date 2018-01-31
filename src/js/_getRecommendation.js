@@ -25,22 +25,24 @@
     console.log('getRecommendation for', date);
     const recommendation = {};
     const dateStart = moment(date.start);
-    const dateStartIso = dateStart.toISOString();
-    const dateEnd = moment(date.end);
-    const dateEndIso = dateEnd.toISOString();
     const dayKey = dateStart.locale('en').format('D-MMM');
+    const dateEnd = moment(date.end);
+    const dateIso = {
+      start: dateStart.toISOString(),
+      end: dateEnd.toISOString()
+    };
     const slots = db.slots[dayKey];
-    let foundedSlots = [];
 
-    slots.forEach(slot => {
-      if (!slot.event) {
-        if (slot.start <= dateStartIso && slot.end >= dateEndIso) {
-          foundedSlots.push(slot);
-        }
-      }
-    });
+    recommendation.date = date;
 
-    recommendation.rooms = chooseRoom(foundedSlots, members, db.rooms);
+    recommendation.rooms = chooseRoom(dateIso, slots, members, db.rooms);
+
+    if(recommendation.rooms.length === 0) {
+      console.log('Need swaps');
+      recommendation.swaps = getSwaps(dateIso, slots, members, db);
+      console.log('recommendation.swaps');
+      console.log(recommendation.swaps);
+    }
 
     return recommendation;
   }
@@ -121,8 +123,12 @@
     console.log('\n\nrecommendation', recommendation);
 
     // if (recommendation.rooms.indexOf(defaultRoom.value) < 0) {
-      selectRoom.setRooms(recommendation.rooms, defaultRoom.value, data.date);
+      selectRoom.setRooms(recommendation, defaultRoom.value);
     // }
+
+    if(recommendation.swaps && recommendation.swaps.length > 0) {
+        selectRoom.showSwaps(recommendation);
+      }
 
     const checkedUsers = checkUsers(data.date, data.members, data.db);
 
@@ -180,11 +186,20 @@
 
   // ------------------------------
 
-  function chooseRoom(slots, members, rooms) {
+  function chooseRoom(dateIso, slots, members, rooms) {
     const nearest = [];
+    const foundedSlots = [];
 
-    for(let i = 0; i < slots.length; i++) {
-      const slot = slots[i];
+    slots.forEach(slot => {
+      if (!slot.event) {
+        if (slot.start <= dateIso.start && slot.end >= dateIso.end) {
+          foundedSlots.push(slot);
+        }
+      }
+    });
+
+    for(let i = 0; i < foundedSlots.length; i++) {
+      const slot = foundedSlots[i];
       const room = rooms[slot.room];
       const floor = room.floor;
       const capacity = room.capacity;
@@ -211,6 +226,32 @@
     });
 
     return roomIds;
+  }
+
+  // ------------------------------
+
+  function getSwaps(dateIso, slots, members, db) {
+    const foundedSwaps = [];
+
+    slots.forEach(slot => {
+      if (slot.event) {
+        if (slot.start <= dateIso.start && slot.end >= dateIso.end) {
+          if(slot.swapReady) {
+            const event = db.events[slot.event.id];
+            const rooms = chooseRoom(event.dateSrc, slots, event.users, db.rooms);
+
+            if (rooms.length > 0) {
+              foundedSwaps.push({
+                event: slot.event.id,
+                room: rooms[0]
+              });
+            }
+          }
+        }
+      }
+    });
+
+    return foundedSwaps;
   }
 
   // ------------------------------

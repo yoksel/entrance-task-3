@@ -11,7 +11,8 @@ function getPageData(eventsData) {
       events[event.id] = {
         id: event.id,
         title: event.title,
-        room: event.room.title,
+        roomId: event.room.id,
+        roomTitle: event.room.title,
         date: tools.prettyDate(event),
         dateSrc: {
           start: event.dateStart,

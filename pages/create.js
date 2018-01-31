@@ -36,6 +36,7 @@ function getPage (req, res) {
     tools.getPopupCalendar(),
     tools.getPageTmpl('_event-user'),
     tools.getPageTmpl('_select-room-item'),
+    tools.getPageTmpl('_select-room-swapitem'),
   ];
 
   Promise.all(dataProms)
@@ -57,6 +58,7 @@ function getPage (req, res) {
         partials.popupCalendar = response[0];
         partials.eventUserTmpl = response[1];
         partials.eventRoomTmpl = response[2];
+        partials.eventSwapTmpl = response[3];
 
         renderPage();
       })
@@ -120,6 +122,7 @@ function renderPage () {
       users: usersData,
       eventUserTmpl: partials.eventUserTmpl,
       eventRoomTmpl: partials.eventRoomTmpl,
+      eventSwapTmpl: partials.eventSwapTmpl,
       rooms: roomsData,
       partials: {
         'symbols': 'components/_symbols',

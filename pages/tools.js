@@ -355,7 +355,7 @@ function getUsersFromRequest (pageReqBody) {
   if (typeof pageReqBody.usersIds === 'string') {
     usersIds = [+pageReqBody.usersIds];
   } else {
-    pageReqBody.usersIds.map(userId => {
+    usersIds = pageReqBody.usersIds.map(userId => {
       return +userId;
     });
   }
