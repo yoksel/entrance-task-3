@@ -15,6 +15,23 @@
   const defaultRoom = form.querySelector('.select-room__default');
   const eventIdElem = form.querySelector('.form__itemid');
 
+  const dateTimeSet = [
+    {
+      input: dayCode,
+      value: dayCode.value,
+    },
+    {
+      input: timeFromInput,
+      value: timeFromInput.value,
+    },
+    {
+      input: timeToInput,
+      value: timeToInput.value,
+    }
+  ];
+
+  let dateTimeIsChanged = false;
+
   addListeners();
 
   // ------------------------------
@@ -47,6 +64,7 @@
       return;
     }
 
+    // DateTime inputs
     let inputsListeners = [
       dateTimeInput,
       timeFromInput,

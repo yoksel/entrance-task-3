@@ -26,10 +26,7 @@
   }
 }
 
-.page--event-created .popup-fader--event-created {
-  display: flex;
-}
-.page--remove-event .popup-fader--remove-event {
+.page--event-popup .popup-fader--event-popup {
   display: flex;
 }
 
@@ -97,6 +94,16 @@
   .popup__title {
     padding-top: 56px;
     background: url("../img/boom.png") 50% 0 no-repeat;
+  }
+}
+
+.popup--event-updated {
+  width: 100%;
+  max-width: 450px;
+
+  .popup__title {
+    padding-top: 56px;
+    background: url("../img/octopus.png") 50% 0 no-repeat;
   }
 }
 

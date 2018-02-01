@@ -119,7 +119,7 @@ function swapEvent () {
       }
     })
     .catch((e) => {
-      console.log('\nwapEvent failed: ');
+      console.log('\nswapEvent failed: ');
       console.log(e);
       getPage();
     });
@@ -149,10 +149,12 @@ function createEvent () {
     roomId: pageReqBody.roomId
   })
     .then(response => {
-      data.evenCreatedtId = response.dataValues.id;
+      data.eventCreatedtId = response.dataValues.id;
       getPage();
     })
     .catch((e) => {
+      console.log('\ncreateEvent failed: ');
+      console.log(e);
       getPage();
     });
 }
@@ -160,25 +162,48 @@ function createEvent () {
 // ------------------------------
 
 function updateEvent () {
+  console.log('\nUPDATEEVENT()');
+  console.log(pageReqBody);
+
   const dateTimeStart = moment(pageReqBody.daycode);
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
   const usersIds = tools.getUsersFromRequest(pageReqBody);
 
-  mutation.updateEvent(global, {
-    id: pageReqBody.itemid,
-    input: {
-      title: pageReqBody.title,
-      dateStart: dateTimeStart.toISOString(),
-      dateEnd: dateTimeEnd.toISOString()
-    },
-    usersIds: usersIds,
-    roomId: pageReqBody.roomid
-  })
+  const mutationsProms = [];
+
+  // Update event title & time
+  mutationsProms.push(
+    mutation.updateEvent(global,
+      {
+        id: pageReqBody.itemid,
+        input: {
+          title: pageReqBody.title,
+          dateStart: dateTimeStart.toISOString(),
+          dateEnd: dateTimeEnd.toISOString()
+        }
+      }
+    )
+  );
+
+  // Update event room
+  mutationsProms.push(
+    mutation.changeEventRoom(global,
+      {
+        id: pageReqBody.itemid,
+        roomId: pageReqBody.roomId
+      }
+    )
+  );
+
+  Promise.all(mutationsProms)
     .then(response => {
+      data.eventUpdatedtId = response[0].dataValues.id;
       getPage();
     })
     .catch((e) => {
+      console.log('\nupdateEvent failed: ');
+      console.log(e);
       getPage();
     });
 }
@@ -202,9 +227,23 @@ function removeEvent () {
 
 function renderPage () {
   pageData.events = events.getPageData(data.events);
-  if (data.evenCreatedtId) {
-    data.event = pageData.events[data.evenCreatedtId];
-    data.pageMod = 'page--event-created';
+  data.popup = {};
+
+  if (data.eventCreatedtId) {
+    data.popup = {
+      title: 'Встреча создана',
+      event: pageData.events[data.eventCreatedtId],
+      pageMod: 'page--event-popup',
+      mod: 'created',
+    };
+  }
+  else if (data.eventUpdatedtId) {
+    data.popup = {
+      title: 'Встреча изменена',
+      event: pageData.events[data.eventUpdatedtId],
+      pageMod: 'page--event-popup',
+      mod: 'updated',
+    };
   }
 
   pageResponse.render(
@@ -218,7 +257,8 @@ function renderPage () {
       sheduleDays: data.shedule,
       popupCalendar: partials.popupCalendar,
       pageData: JSON.stringify(pageData),
-      pageMod: data.pageMod,
+      popup: data.popup,
+      pageMod: data.popup.pageMod,
       partials: {
         'symbols': 'components/_symbols',
         'page-header': 'components/_page-header',
@@ -226,7 +266,7 @@ function renderPage () {
         'days-nav': 'components/_days-nav',
         'popup--calendar': 'components/_popup--calendar',
         'popup--view-info': 'components/_popup--view-info',
-        'popup--event-created': 'components/_popup--event-created'
+        'popup--event-created': 'components/_popup--event-popup'
       }
     }
   );
