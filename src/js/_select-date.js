@@ -65,6 +65,7 @@
     this.input.value = dateShow;
 
     selectUser.checkUsers();
+    updateRecommendation();
     closePopups();
   };
 
