@@ -23,9 +23,6 @@
     });
 
     this.timeFromInput.addEventListener('input', () => {
-      const newDate = this.getDateFromTime(this.timeFromInput.value);
-      this.dayCodeInput.value = newDate.toISOString();
-
       this.validateTime();
     });
 
