@@ -116,7 +116,8 @@ function getMonthes () {
     }
 
     for (var d = 0; d < lastDay; d++) {
-      const dayDate = firstDate.clone().add(d, 'd');
+      let dayDate = firstDate.clone().add(d, 'd');
+      dayDate = dayDate.hour(0).minute(0).second(0).millisecond(0);
       let dayClass = 'calendar__day';
       let buttonClass = 'calendar__button';
       let dayStyle = '';

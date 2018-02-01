@@ -76,7 +76,8 @@ function fillData () {
   if (pageQuery.dateTime) {
     const dateTime = moment(pageQuery.dateTime);
     date = dateTime.format('D MMMM');
-    dayCode = dateTime.toISOString();
+    dayCode = dateTime.clone().hour(0).minute(0).second(0);
+    dayCode = dayCode.toISOString();
     timeStart = dateTime.format('HH:mm');
     timeEnd = dateTime.clone().add(30, 'm').format('HH:mm');
   }

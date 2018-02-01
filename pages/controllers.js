@@ -134,9 +134,11 @@ function createEvent () {
     return;
   }
 
-  const dateTimeStart = moment(pageReqBody.daycode);
+  const dateStart = moment(pageReqBody.daycode);
+  const timeFrom = pageReqBody.timeFrom.split(':');
+  const dateTimeStart = dateStart.hour(timeFrom[0]).minute(timeFrom[1])
   const timeTo = pageReqBody.timeTo.split(':');
-  const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
+  const dateTimeEnd = dateTimeStart.clone().hour(timeTo[0]).minute(timeTo[1]);
   const usersIds = tools.getUsersFromRequest(pageReqBody);
 
   mutation.createEvent(global, {
@@ -165,7 +167,9 @@ function updateEvent () {
   console.log('\nUPDATEEVENT()');
   console.log(pageReqBody);
 
-  const dateTimeStart = moment(pageReqBody.daycode);
+  const dateStart = moment(pageReqBody.daycode);
+  const timeFrom = pageReqBody.timeFrom.split(':');
+  const dateTimeStart = dateStart.hour(timeFrom[0]).minute(timeFrom[1])
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
   const usersIds = tools.getUsersFromRequest(pageReqBody);

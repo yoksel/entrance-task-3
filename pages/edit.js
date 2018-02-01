@@ -72,13 +72,15 @@ function getPage (req, res) {
 function fillData (event) {
   const itemData = event.dataValues;
   const dateTime = moment(itemData.dateStart);
+  let dayCode = dateTime.clone().hour(0).minute(0).second(0);
+    dayCode = dayCode.toISOString();
   const timeStart = dateTime.format('HH:mm');
   const timeEnd = moment(itemData.dateEnd).format('HH:mm');
 
   return {
     id: event.id,
     title: event.title,
-    dayCode: dateTime.toISOString(),
+    dayCode: dayCode,
     date: dateTime.format('D MMMM'),
     timeStart: timeStart,
     timeEnd: timeEnd,
