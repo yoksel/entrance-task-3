@@ -238,16 +238,17 @@ function findMatches (items, pageReqBody) {
 
       // Event, need check room
       if (pageReqBody.timeFrom) {
-        const itemStartTime = itemData.dateStart;
-        const itemEndTime = itemData.dateEnd;
-        const time = getTimeFromRequest(pageReqBody);
+        const itemStartDateTime = moment(itemData.dateStart);
+        const itemEndDateTime = moment(itemData.dateEnd);
+        const reqEventTime = getTimeFromRequest(pageReqBody);
 
-        if ((time.start >= itemStartTime && time.start <= itemEndTime) ||
-          (time.end >= itemStartTime && time.end <= itemEndTime)) {
-          // Same date & time
+        // Same room
+        if (itemData.RoomId === +pageReqBody.roomId) {
 
-          if (itemData.RoomId === +pageReqBody.roomId) {
-            // Same room
+          if ((reqEventTime.start >= itemStartDateTime && reqEventTime.start <= itemEndDateTime) ||
+            (reqEventTime.end >= itemStartDateTime && reqEventTime.end <= itemEndDateTime)) {
+
+            // Same date & time
             matches.byDateRoom++;
           }
         }
