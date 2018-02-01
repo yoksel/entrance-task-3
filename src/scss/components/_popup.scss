@@ -26,7 +26,8 @@
   }
 }
 
-.page--event-popup .popup-fader--event-popup {
+.page--event-popup .popup-fader--event-popup,
+.page--remove-event .popup-fader--remove-event {
   display: flex;
 }
 
