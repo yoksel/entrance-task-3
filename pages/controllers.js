@@ -25,6 +25,8 @@ let pageReqBody = null;
 function handleRequest (req, res) {
   pageResponse = res;
   pageReqBody = req.body;
+  data.eventCreatedtId = null;
+  data.eventUpdatedtId = null;
 
   query.events()
     .then(response => {
