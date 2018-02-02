@@ -17,6 +17,7 @@
 }
 
 .select-room__label {
+  position: relative;
   display: block;
   padding: 13px 12px;
   background: $color-smoke;
@@ -25,6 +26,15 @@
   font-size: 15px;
   line-height: 1.2;
   cursor: pointer;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 
   @media(min-width: $bp-desktop) {
     font-size: 13px;
