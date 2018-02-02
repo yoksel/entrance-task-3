@@ -246,7 +246,7 @@ function findMatches (items, pageReqBody) {
         if (itemData.RoomId === +pageReqBody.roomId) {
 
           if ((reqEventTime.start >= itemStartDateTime && reqEventTime.start <= itemEndDateTime) ||
-            (reqEventTime.end >= itemStartDateTime && reqEventTime.end <= itemEndDateTime)) {
+            (reqEventTime.end > itemStartDateTime && reqEventTime.end <= itemEndDateTime)) {
 
             // Same date & time
             matches.byDateRoom++;
