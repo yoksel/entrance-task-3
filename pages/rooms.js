@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const mustache = require('mustache');
 const tools = require('./tools');
+const moment = require('moment');
+moment.locale('ru');
 
 // ------------------------------
 
@@ -42,10 +44,51 @@ function getRoomsData (data, selectedId) {
 
 // ------------------------------
 
-function getPageData (data) {
+function getEmptyRoomsData (data) {
+  if(!data.event.dateTimeStart) {
+    // Create from scratch
+    return [];
+  }
+
+  const roomsData = [];
+  const rooms = data.rooms;
+  const selectedId = data.roomId;
+  const dayKey = data.event.dayKey;
+  const slots = data.slots[dayKey];
+  const eventStart = moment(data.event.dateTimeStart);
+  const eventEnd = moment(data.event.dateTimeEnd);
+  const emptyRooms = {};
+
+  const emptySlots = slots.filter(slot => {
+    if (!slot.event) {
+      if (slot.start <= eventStart && slot.end >= eventEnd) {
+      emptyRooms[+slot.room] = slot.room;
+      return true;
+      }
+    }
+  });
+
+  rooms.forEach(item => {
+    if(emptyRooms[item.id]) {
+      const itemData = item.dataValues;
+      itemData.checked = '';
+
+      if (itemData.id === +selectedId) {
+        itemData.checked = 'checked';
+      }
+      roomsData.push(itemData);
+    }
+  });
+
+  return roomsData;
+}
+
+// ------------------------------
+
+function getPageData (rooms) {
   const roomsData = {};
 
-  data.forEach(item => {
+  rooms.forEach(item => {
     roomsData[item.id] = item.dataValues;
   });
 
@@ -58,8 +101,8 @@ function fillRooms (data) {
   const title = data.title;
   const rooms = data.rooms;
   const roomId = data.roomId;
-
   const mods = ['rooms'];
+  const emptyRooms = getEmptyRoomsData(data);
 
   if (!roomId) {
     mods.push('hidden');
@@ -74,7 +117,7 @@ function fillRooms (data) {
         mods: mods
       })
     },
-    list: getRoomsData(rooms, roomId),
+    list: emptyRooms,
     mod: 'select-room--room-selected'
   };
 }

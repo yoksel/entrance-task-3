@@ -71,17 +71,26 @@ function getPage (req, res) {
 
 function fillData (event) {
   const itemData = event.dataValues;
-  const dateTime = moment(itemData.dateStart);
-  let dayCode = dateTime.clone().hour(0).minute(0).second(0);
-    dayCode = dayCode.toISOString();
-  const timeStart = dateTime.format('HH:mm');
-  const timeEnd = moment(itemData.dateEnd).format('HH:mm');
+  const dateTimeStart = moment(itemData.dateStart);
+  const dateTimeStartIso = dateTimeStart.toISOString();
+  const dateTimeEnd = dateTimeStart.clone().add(30, 'm');
+  const dateTimeEndIso = dateTimeEnd.toISOString();
+
+  const date = dateTimeStart.format('D MMMM');
+  let dayCode = dateTimeStart.clone().hour(0).minute(0).second(0);
+  dayCode = dayCode.toISOString();
+
+  const timeStart = dateTimeStart.format('HH:mm');
+  const timeEnd = dateTimeEnd.format('HH:mm');
 
   return {
     id: event.id,
     title: event.title,
     dayCode: dayCode,
-    date: dateTime.format('D MMMM'),
+    dayKey: tools.getDayKey(dayCode),
+    date: date,
+    dateTimeStart: dateTimeStartIso,
+    dateTimeEnd: dateTimeEndIso,
     timeStart: timeStart,
     timeEnd: timeEnd,
     roomId: itemData.RoomId
@@ -100,7 +109,9 @@ function renderPage () {
   const roomsData = rooms.fillRooms({
     title: 'Ваша переговорка',
     rooms: data.rooms,
-    roomId: data.eventData.roomId
+    roomId: data.eventData.roomId,
+    slots: data.slots,
+    event: data.eventData
   });
 
   pageResponse.render(

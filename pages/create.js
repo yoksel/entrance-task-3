@@ -21,7 +21,7 @@ function getPage (req, res) {
   pageResponse = res;
   pageQuery = req.query;
 
-  data.event = fillData();
+  data.eventData = fillData();
 
   const dataProms = [
     query.events(),
@@ -70,21 +70,34 @@ function getPage (req, res) {
 function fillData () {
   let date = '';
   let dayCode = '';
-  let timeStart = null;
+  let dayCodeEnd = '';
+  let dateTimeStart = '';
+  let dateTimeStartIso = '';
+  let dateTimeEnd = '';
+  let dateTimeEndIso = '';
+  let timeStart = '';
   let timeEnd = '';
 
   if (pageQuery.dateTime) {
-    const dateTime = moment(pageQuery.dateTime);
-    date = dateTime.format('D MMMM');
-    dayCode = dateTime.clone().hour(0).minute(0).second(0);
+    dateTimeStart = moment(pageQuery.dateTime);
+    dateTimeStartIso = dateTimeStart.toISOString();
+    dateTimeEnd = dateTimeStart.clone().add(30, 'm');
+    dateTimeEndIso = dateTimeEnd.toISOString();
+
+    date = dateTimeStart.format('D MMMM');
+    dayCode = dateTimeStart.clone().hour(0).minute(0).second(0);
     dayCode = dayCode.toISOString();
-    timeStart = dateTime.format('HH:mm');
-    timeEnd = dateTime.clone().add(30, 'm').format('HH:mm');
+
+    timeStart = dateTimeStart.format('HH:mm');
+    timeEnd = dateTimeEnd.format('HH:mm');
   }
 
   return {
     dayCode: dayCode,
+    dayKey: tools.getDayKey(dayCode),
     date: date,
+    dateTimeStart: dateTimeStartIso,
+    dateTimeEnd: dateTimeEndIso,
     timeStart: timeStart,
     timeEnd: timeEnd
   };
@@ -107,13 +120,15 @@ function renderPage () {
   const roomsData = rooms.fillRooms({
     title: legendText,
     rooms: data.rooms,
-    roomId: pageQuery.roomId
+    roomId: pageQuery.roomId,
+    slots: data.slots,
+    event: data.eventData
   });
 
   pageResponse.render(
     'create',
     {
-      event: data.event,
+      event: data.eventData,
       actionId: tools.getRandomId(),
       monthes: tools.getMonthes,
       pageData: JSON.stringify(pageData),
