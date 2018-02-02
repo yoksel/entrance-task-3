@@ -19,6 +19,7 @@ const data = {};
 const partials = {};
 let pageResponse = null;
 let pageReqBody = null;
+let lastActionId = null;
 
 // ------------------------------
 
@@ -32,9 +33,21 @@ function handleRequest (req, res) {
     .then(response => {
       data.events = response;
 
-      const matches = tools.findMatches(data.events, pageReqBody);
+      if (pageReqBody.action) {
+        if (pageReqBody.actionId === lastActionId) {
+          // Page wath reloaded after submit
+          // Action was handled already, skip request
+          getPage();
+          return;
+        }
+        else {
+          lastActionId = pageReqBody.actionId;
+        }
+      }
 
       if (pageReqBody.action === 'create') {
+        const matches = tools.findMatches(data.events, pageReqBody);
+
         if (matches.byDateRoom > 0) {
           // Room & date match
           if (pageReqBody.swapEvent) {
@@ -45,7 +58,7 @@ function handleRequest (req, res) {
         } else {
           createEvent();
         }
-      } else if (pageReqBody.action === 'remove' && matches.byId > 0) {
+      } else if (pageReqBody.action === 'remove') {
         removeEvent();
       } else if (pageReqBody.action === 'update') {
         updateEvent();

@@ -114,6 +114,7 @@ function renderPage () {
     'create',
     {
       event: data.event,
+      actionId: tools.getRandomId(),
       monthes: tools.getMonthes,
       pageData: JSON.stringify(pageData),
       popupCalendar: partials.popupCalendar,

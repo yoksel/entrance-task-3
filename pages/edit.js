@@ -107,6 +107,7 @@ function renderPage () {
     'edit',
     {
       event: data.eventData,
+      actionId: tools.getRandomId(),
       monthes: tools.getMonthes,
       pageData: JSON.stringify(pageData),
       popupCalendar: partials.popupCalendar,

@@ -219,22 +219,12 @@ function getPopupCalendar () {
 
 function findMatches (items, pageReqBody) {
   const matches = {
-    byId: 0,
-    byName: 0,
     byDateRoom: 0
   };
 
   if (pageReqBody.action) {
     items.forEach(item => {
       const itemData = item.dataValues;
-
-      if (pageReqBody.login && pageReqBody.login === itemData.login) {
-        matches.byName++;
-      }
-
-      if (+pageReqBody.itemid === itemData.id) {
-        matches.byId++;
-      }
 
       // Event, need check room
       if (pageReqBody.timeFrom) {
@@ -381,6 +371,12 @@ function getPageTmpl (tmpl) {
 
 // ------------------------------
 
+function getRandomId(){
+  return Math.round(Math.random() * 10000);
+}
+
+// ------------------------------
+
 module.exports = {
   addMods: addMods,
   daysList: daysList,
@@ -393,6 +389,7 @@ module.exports = {
   getMonthes: getMonthes,
   getPageTmpl: getPageTmpl,
   getPopupCalendar: getPopupCalendar,
+  getRandomId: getRandomId,
   getTimeFromRequest: getTimeFromRequest,
   getSheduleDays: getSheduleDays,
   getUsersFromRequest: getUsersFromRequest,
