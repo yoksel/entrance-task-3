@@ -117,14 +117,15 @@ function getMonthes () {
 
     for (var d = 0; d < lastDay; d++) {
       let dayDate = firstDate.clone().add(d, 'd');
-      dayDate = dayDate.hour(0).minute(0).second(0).millisecond(0);
+      dayDate = dayDate;
       let dayClass = 'calendar__day';
       let buttonClass = 'calendar__button';
       let dayStyle = '';
-      const day = dayDate.format('D');
+      const day = +dayDate.format('D');
 
       if (month === todayObj.monthNum) {
         if (day < todayObj.dayNum) {
+
           buttonClass += ' calendar__button--past';
         } else if (day === todayObj.dayNum) {
           buttonClass += ' calendar__button--today';
@@ -234,10 +235,8 @@ function findMatches (items, pageReqBody) {
 
         // Same room
         if (itemData.RoomId === +pageReqBody.roomId) {
-
           if ((reqEventTime.start >= itemStartDateTime && reqEventTime.start <= itemEndDateTime) ||
             (reqEventTime.end > itemStartDateTime && reqEventTime.end <= itemEndDateTime)) {
-
             // Same date & time
             matches.byDateRoom++;
           }
@@ -371,7 +370,7 @@ function getPageTmpl (tmpl) {
 
 // ------------------------------
 
-function getRandomId(){
+function getRandomId () {
   return Math.round(Math.random() * 10000);
 }
 
