@@ -22,7 +22,7 @@ function fillHours () {
 // ------------------------------
 
 function getShedule (params) {
-  const events = params.events;
+  const events = params.events.sort(sortByDateTime);
   const floors = params.floors;
   const isHasItems = params.isHasItems;
   const shedule = {};
@@ -293,6 +293,22 @@ function getSlotsList (events, floors) {
   const shedule = getShedule(events, floors);
 
   return sheduleToSlotsList(shedule);
+}
+
+// ------------------------------
+
+function sortByDateTime(a, b) {
+  const aTime = a.dataValues.dateStart;
+  const bTime = b.dataValues.dateStart;
+
+  if (aTime > bTime) {
+    return 1;
+  }
+  else if (aTime < bTime) {
+    return -1;
+  }
+
+  return 0;
 }
 
 // ------------------------------
