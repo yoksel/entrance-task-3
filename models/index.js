@@ -12,7 +12,8 @@ const sequelize = new Sequelize(
     peratorsAliases: {
       $and: Op.and
     },
-    logging: false
+    logging: false,
+    operatorsAliases: false
   }
 );
 
