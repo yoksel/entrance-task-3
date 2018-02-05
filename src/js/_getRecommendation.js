@@ -13,6 +13,7 @@
   const timeFromInput = form.querySelector('.select-datetime__time--from');
   const timeToInput = form.querySelector('.select-datetime__time--to');
   const defaultRoom = form.querySelector('.select-room__default');
+  const eventIdElem = form.querySelector('.form__itemid');
   let isCurrentRoomFits = true;
 
   addListeners();
@@ -148,9 +149,11 @@
     }
 
     slots.forEach((slot, i) => {
-      if (!slot.event) {
+      if (slot.start <= dateIso.start && slot.end >= dateIso.end) {
+        if (!slot.event) {
         // Free slot
-        if (slot.start <= dateIso.start && slot.end >= dateIso.end) {
+          foundedSlots.push(slot);
+        } else if (eventIdElem && slot.event && +eventIdElem.value === slot.event.id) {
           foundedSlots.push(slot);
         }
       }

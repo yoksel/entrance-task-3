@@ -26,24 +26,6 @@ function getList (floors) {
 
 // ------------------------------
 
-function getRoomsData (data, selectedId) {
-  const roomsData = [];
-
-  data.rooms.forEach(item => {
-    const itemData = item.dataValues;
-    itemData.checked = '';
-
-    if (itemData.id === +selectedId) {
-      itemData.checked = 'checked';
-    }
-    roomsData.push(itemData);
-  });
-
-  return roomsData;
-}
-
-// ------------------------------
-
 function getEmptyRoomsData (data) {
   if (!data.event.dateTimeStart) {
     // Create from scratch
@@ -181,7 +163,6 @@ function sortByFloor (a, b) {
 module.exports = {
   getList: getList,
   getPageData: getPageData,
-  getRoomsData: getRoomsData,
   getRoomsByFloors: getRoomsByFloors,
   fillRooms: fillRooms,
   sortByFloor: sortByFloor

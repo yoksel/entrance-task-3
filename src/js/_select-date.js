@@ -1,6 +1,6 @@
 'use strict';
 
-/* global closePopups, moment, updateRecommendation */
+/* global closePopups, moment, selectUser, updateRecommendation */
 
 // ------------------------------
 // SELECT DATE

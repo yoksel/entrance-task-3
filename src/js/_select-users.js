@@ -51,9 +51,9 @@
 
   SelectUser.prototype.checkUsers = function () {
     const date = selectDate.getFormDate();
-    const dateStart = moment(date.start);
+    const dateStart = moment(date.start).second(0).millisecond(0);
     const dateStartIso = dateStart.toISOString();
-    const dateEnd = moment(date.end);
+    const dateEnd = moment(date.end).second(0).millisecond(0);
     const dateEndIso = dateEnd.toISOString();
     const dayKey = dateStart.locale('en').format('D-MMM');
     const slots = pageData.slots[dayKey];
@@ -72,9 +72,14 @@
     });
 
     slots.forEach(slot => {
-      if (slot.event && slot.event.id !== +eventId) {
-        if ((dateStartIso <= slot.start && dateEndIso >= slot.start && dateEndIso <= slot.end) ||
-            (dateStartIso >= slot.start && dateStartIso <= slot.end && dateEndIso >= slot.end)) {
+      if (slot.event && slot.event.id && slot.event.id !== +eventId) {
+        const slotStartNoMs = moment(slot.start).second(0).millisecond(0);
+        const slotStartIso = slotStartNoMs.toISOString();
+        const slotEndNoMs = moment(slot.end).second(0).millisecond(0);
+        const slotEndIso = slotEndNoMs.toISOString();
+
+        if ((dateStartIso > slotStartIso && dateStartIso < slotEndIso) ||
+          (dateEndIso > slotStartIso && dateEndIso < slotEndIso)) {
           const usersList = Object.values(slot.users);
 
           const filtered = usersList.filter(user => {

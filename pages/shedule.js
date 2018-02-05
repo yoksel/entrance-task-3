@@ -57,15 +57,16 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
 
         events.forEach(event => {
           const eventStartHour = moment(event.dateStart).minute(0).second(0).millisecond(0);
-          const eventStartTimeIso = eventStartHour.toISOString();
+          const eventStartHourIso = eventStartHour.toISOString();
 
-          if (event.RoomId === +roomId && eventStartTimeIso === startTimeIso) {
-            const eventStartTime = moment(event.dateStart);
+          if (event.RoomId === +roomId && eventStartHourIso === startTimeIso) {
+            const eventStartTime = moment(event.dateStart).second(0).millisecond(0);
             const eventEndTime = moment(event.dateEnd);
+            const eventStartTimeNoS = eventStartTime.clone().second(0).millisecond(0);
+            const startTimeNoS = startTime.clone().second(0).millisecond(0);
 
             // Fill empty slot
-
-            if (startTime.toISOString() !== eventStartTime.toISOString()) {
+            if (startTimeNoS.toISOString() !== eventStartTimeNoS.toISOString()) {
               const emptySlot = {
                 start: startTime,
                 end: eventStartTime,
