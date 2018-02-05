@@ -25,8 +25,8 @@ function getPage (req, res) {
   const dataProms = [
     query.event(global, {id: eventId}),
     query.events(),
-    query.users(),
-    query.rooms()
+    query.rooms(),
+    query.users()
   ];
 
   const partialsProms = [
@@ -41,9 +41,9 @@ function getPage (req, res) {
       data.event = response[0];
       data.eventData = fillData(response[0]);
       data.events = response[1];
-      data.users = response[2];
-      data.rooms = response[3].sort(rooms.sortByFloor);
+      data.rooms = response[2].sort(rooms.sortByFloor);
       data.floors = rooms.getRoomsByFloors(data.rooms);
+      data.users = response[3];
 
       data.slots = shedule.getSlotsList({
         events: data.events,
@@ -73,7 +73,7 @@ function fillData (event) {
   const itemData = event.dataValues;
   const dateTimeStart = moment(itemData.dateStart);
   const dateTimeStartIso = dateTimeStart.toISOString();
-  const dateTimeEnd = dateTimeStart.clone().add(30, 'm');
+  const dateTimeEnd = moment(itemData.dateEnd);
   const dateTimeEndIso = dateTimeEnd.toISOString();
 
   const date = dateTimeStart.format('D MMMM');

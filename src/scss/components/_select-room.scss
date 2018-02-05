@@ -16,12 +16,16 @@
   }
 }
 
-.select-room__label {
+.select-room__label,
+.select-room__event-swap {
   position: relative;
   display: block;
   padding: 13px 12px;
+  box-sizing: border-box;
   background: $color-smoke;
+  border: none;
   border-radius: $radius;
+  text-align: left;
   font-weight: normal;
   font-size: 15px;
   line-height: 1.2;
@@ -40,10 +44,10 @@
     font-size: 13px;
     padding: 12px;
   }
+}
 
-  &--swap {
-    background: #c2e874;
-  }
+.select-room__event-swap {
+  background: #c2e874;
 }
 
 .select-room__input:checked + .select-room__label {

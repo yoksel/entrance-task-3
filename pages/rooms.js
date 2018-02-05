@@ -29,7 +29,7 @@ function getList (floors) {
 function getRoomsData (data, selectedId) {
   const roomsData = [];
 
-  data.forEach(item => {
+  data.rooms.forEach(item => {
     const itemData = item.dataValues;
     itemData.checked = '';
 
@@ -45,7 +45,7 @@ function getRoomsData (data, selectedId) {
 // ------------------------------
 
 function getEmptyRoomsData (data) {
-  if(!data.event.dateTimeStart) {
+  if (!data.event.dateTimeStart) {
     // Create from scratch
     return [];
   }
@@ -59,17 +59,19 @@ function getEmptyRoomsData (data) {
   const eventEnd = moment(data.event.dateTimeEnd);
   const emptyRooms = {};
 
-  const emptySlots = slots.filter(slot => {
-    if (!slot.event) {
-      if (slot.start <= eventStart && slot.end >= eventEnd) {
-      emptyRooms[+slot.room] = slot.room;
-      return true;
+  slots.forEach(slot => {
+    if (slot.start <= eventStart && slot.end >= eventEnd) {
+      if (!slot.event) {
+        emptyRooms[+slot.room] = slot.room;
+        return true;
+      } else if (data.event.id && data.event.id === slot.event.dataValues.id) {
+        emptyRooms[+slot.room] = slot.room;
       }
     }
   });
 
   rooms.forEach(item => {
-    if(emptyRooms[item.id]) {
+    if (emptyRooms[item.id]) {
       const itemData = item.dataValues;
       itemData.checked = '';
 
@@ -99,10 +101,9 @@ function getPageData (rooms) {
 
 function fillRooms (data) {
   const title = data.title;
-  const rooms = data.rooms;
   const roomId = data.roomId;
   const mods = ['rooms'];
-  const emptyRooms = getEmptyRoomsData(data);
+  const rooms = getEmptyRoomsData(data);
 
   if (!roomId) {
     mods.push('hidden');
@@ -117,7 +118,7 @@ function fillRooms (data) {
         mods: mods
       })
     },
-    list: emptyRooms,
+    list: rooms,
     mod: 'select-room--room-selected'
   };
 }

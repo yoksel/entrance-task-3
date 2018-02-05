@@ -17,10 +17,10 @@ function parseDate (date) {
 
   return {
     year: newDate.format('YYYY'),
-    monthNum: newDate.format('MM'),
+    monthNum: +newDate.format('MM'),
     month: newDate.format('MMMM'),
     weekDay: newDate.format('dddd'),
-    dayNum: newDate.format('D'),
+    dayNum: +newDate.format('D'),
     dayKey: getDayKey(newDate),
     dayCode: newDate.format('DD/MM/YY'),
     hours: newDate.format('HH'),
@@ -101,7 +101,7 @@ function getMonthes () {
     const firstDate = moment().add(m, 'M').date(1);
     const lastDate = firstDate.clone().add(1, 'M').subtract(1, 'd');
     const lastDay = lastDate.format('D');
-    const month = firstDate.format('MM');
+    const month = +firstDate.format('MM');
 
     let newMonthFirstWeekDay = firstDate.format('E') - 1;
 
@@ -117,7 +117,6 @@ function getMonthes () {
 
     for (var d = 0; d < lastDay; d++) {
       let dayDate = firstDate.clone().add(d, 'd');
-      dayDate = dayDate;
       let dayClass = 'calendar__day';
       let buttonClass = 'calendar__button';
       let dayStyle = '';
@@ -125,7 +124,6 @@ function getMonthes () {
 
       if (month === todayObj.monthNum) {
         if (day < todayObj.dayNum) {
-
           buttonClass += ' calendar__button--past';
         } else if (day === todayObj.dayNum) {
           buttonClass += ' calendar__button--today';

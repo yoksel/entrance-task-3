@@ -39,8 +39,7 @@ function handleRequest (req, res) {
           // Action was handled already, skip request
           getPage();
           return;
-        }
-        else {
+        } else {
           lastActionId = pageReqBody.actionId;
         }
       }
@@ -48,13 +47,11 @@ function handleRequest (req, res) {
       if (pageReqBody.action === 'create') {
         const matches = tools.findMatches(data.events, pageReqBody);
 
-        if (matches.byDateRoom > 0) {
+        if (pageReqBody.swapEvent) {
+          swapEvent();
+        } else if (matches.byDateRoom > 0) {
           // Room & date match
-          if (pageReqBody.swapEvent) {
-            swapEvent();
-          } else {
-            getPage();
-          }
+          getPage();
         } else {
           createEvent();
         }
@@ -151,7 +148,7 @@ function createEvent () {
 
   const dateStart = moment(pageReqBody.daycode);
   const timeFrom = pageReqBody.timeFrom.split(':');
-  const dateTimeStart = dateStart.hour(timeFrom[0]).minute(timeFrom[1])
+  const dateTimeStart = dateStart.hour(timeFrom[0]).minute(timeFrom[1]);
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hour(timeTo[0]).minute(timeTo[1]);
   const usersIds = tools.getUsersFromRequest(pageReqBody);
@@ -179,15 +176,11 @@ function createEvent () {
 // ------------------------------
 
 function updateEvent () {
-  console.log('\nUPDATEEVENT()');
-  console.log(pageReqBody);
-
   const dateStart = moment(pageReqBody.daycode);
   const timeFrom = pageReqBody.timeFrom.split(':');
-  const dateTimeStart = dateStart.hour(timeFrom[0]).minute(timeFrom[1])
+  const dateTimeStart = dateStart.hour(timeFrom[0]).minute(timeFrom[1]);
   const timeTo = pageReqBody.timeTo.split(':');
   const dateTimeEnd = dateTimeStart.clone().hours(timeTo[0]).minutes(timeTo[1]);
-  const usersIds = tools.getUsersFromRequest(pageReqBody);
 
   const mutationsProms = [];
 
@@ -253,15 +246,14 @@ function renderPage () {
       title: 'Встреча создана',
       event: pageData.events[data.eventCreatedtId],
       pageMod: 'page--event-popup',
-      mod: 'created',
+      mod: 'created'
     };
-  }
-  else if (data.eventUpdatedtId) {
+  } else if (data.eventUpdatedtId) {
     data.popup = {
       title: 'Встреча изменена',
       event: pageData.events[data.eventUpdatedtId],
       pageMod: 'page--event-popup',
-      mod: 'updated',
+      mod: 'updated'
     };
   }
 

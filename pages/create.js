@@ -70,7 +70,6 @@ function getPage (req, res) {
 function fillData () {
   let date = '';
   let dayCode = '';
-  let dayCodeEnd = '';
   let dateTimeStart = '';
   let dateTimeStartIso = '';
   let dateTimeEnd = '';

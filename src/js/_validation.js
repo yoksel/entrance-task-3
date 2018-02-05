@@ -11,7 +11,6 @@
   const usersTextInput = form.querySelector('.select-users__input--text');
   const messageElem = form.querySelector('.form__message');
   const messageTextElem = form.querySelector('.form__message-text');
-  const buttonRemove = form.querySelector('.form__button--remove');
 
   // ------------------------------
 

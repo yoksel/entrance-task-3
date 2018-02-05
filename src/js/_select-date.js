@@ -1,6 +1,6 @@
 'use strict';
 
-/* global closePopups, moment */
+/* global closePopups, moment, updateRecommendation */
 
 // ------------------------------
 // SELECT DATE
@@ -108,10 +108,8 @@
 
   const selectDateElem = document.querySelector('.select-datetime');
 
-  if(selectDateElem) {
+  if (selectDateElem) {
     const selectDate = new SelectDate(selectDateElem);
     window.selectDate = selectDate;
   }
-
-
 }(window));

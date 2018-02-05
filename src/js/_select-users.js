@@ -1,6 +1,6 @@
 'use strict';
 
-/* global closePopups, getTemplate, Mustache, pageData, selectDate, updateRecommendation */
+/* global closePopups, getTemplate, moment, Mustache, pageData, selectDate, updateRecommendation */
 
 // ------------------------------
 // SELECT USERS
@@ -62,7 +62,7 @@
     const usersList = Object.values(pageData.users);
     let foundedUsers = [];
 
-    if(!slots) {
+    if (!slots) {
       // Past or far future events
       return;
     }
@@ -92,7 +92,7 @@
     });
 
     this.highlightUsers();
-  }
+  };
 
   // ------------------------------
 

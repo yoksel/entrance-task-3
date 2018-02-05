@@ -100,4 +100,4 @@
       throttle(chageClassOnScroll);
     });
   }
-}(this));
+}(window));

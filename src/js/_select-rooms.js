@@ -38,6 +38,8 @@
     });
   };
 
+  // ------------------------------
+
   SelectRoom.prototype.setRooms = function (recommendation, defaultRoom) {
     this.recommendation = recommendation;
     const rooms = recommendation.rooms;
@@ -68,6 +70,8 @@
       this.legend.innerHTML = 'Рекомендованные переговорки';
     }
   };
+
+  // ------------------------------
 
   SelectRoom.prototype.showSwaps = function (recommendation) {
     const swaps = recommendation.swaps;
@@ -100,6 +104,8 @@
     this.legend.innerHTML = 'Рекомендованные перестановки';
   };
 
+  // ------------------------------
+
   SelectRoom.prototype.saveSwap = function (dataSet) {
     this.eventSwapEventElem.value = dataSet.swapEvent;
     this.eventSwapFromlElem.value = dataSet.swapFromRoom;
@@ -119,12 +125,16 @@
     this.legend.innerHTML = 'Ваша переговорка';
   };
 
+  // ------------------------------
+
   SelectRoom.prototype.addVariant = function (data, tmpl) {
     Mustache.parse(tmpl);
     const rendered = Mustache.render(tmpl, data);
 
     return rendered;
   };
+
+  // ------------------------------
 
   const selectRoomElem = document.querySelector('.select-room');
 

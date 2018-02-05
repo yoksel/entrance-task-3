@@ -13,24 +13,7 @@
   const timeFromInput = form.querySelector('.select-datetime__time--from');
   const timeToInput = form.querySelector('.select-datetime__time--to');
   const defaultRoom = form.querySelector('.select-room__default');
-  const eventIdElem = form.querySelector('.form__itemid');
-
-  const dateTimeSet = [
-    {
-      input: dayCode,
-      value: dayCode.value,
-    },
-    {
-      input: timeFromInput,
-      value: timeFromInput.value,
-    },
-    {
-      input: timeToInput,
-      value: timeToInput.value,
-    }
-  ];
-
-  let dateTimeIsChanged = false;
+  let isCurrentRoomFits = true;
 
   addListeners();
 
@@ -50,8 +33,13 @@
     recommendation.date = date;
     recommendation.rooms = chooseRoom(dateIso, slots, members, db.rooms);
 
-    if (recommendation.rooms.length === 0) {
+    if (recommendation.rooms.length === 0 && isCurrentRoomFits) {
+      // Empty rooms not found, check swaps
       recommendation.swaps = getSwaps(dateIso, slots, members, db);
+
+      if (recommendation.swaps.length === 0) {
+        console.log('Тут должен быть поиск свободных переговорок ближайших по времени, он не сделан, увы.');
+      }
     }
 
     return recommendation;
@@ -72,8 +60,14 @@
     ];
 
     inputsListeners.forEach(elem => {
-      elem.addEventListener('input', updateRecommendation);
-      elem.addEventListener('change', updateRecommendation);
+      elem.addEventListener('input', () => {
+        selectUser.checkUsers();
+        updateRecommendation();
+      });
+      elem.addEventListener('change', () => {
+        selectUser.checkUsers();
+        updateRecommendation();
+      });
     });
   }
 
@@ -85,6 +79,7 @@
     if (!data) {
       return;
     }
+    isCurrentRoomFits = checkCurrentRoom(data.db.rooms, data.members, defaultRoom.value);
 
     const recommendation = getRecommendation(data.date, data.members, data.db);
 
@@ -93,7 +88,6 @@
     if (recommendation.swaps && recommendation.swaps.length > 0) {
       selectRoom.showSwaps(recommendation);
     }
-
   }
 
   // ------------------------------
@@ -153,8 +147,9 @@
       return nearest;
     }
 
-    slots.forEach(slot => {
+    slots.forEach((slot, i) => {
       if (!slot.event) {
+        // Free slot
         if (slot.start <= dateIso.start && slot.end >= dateIso.end) {
           foundedSlots.push(slot);
         }
@@ -194,27 +189,85 @@
   // ------------------------------
 
   function getSwaps (dateIso, slots, members, db) {
-    const foundedSwaps = [];
+    let foundedSwaps = [];
+    const slotsForPeriod = {
+      empty: [],
+      filled: []
+    };
 
+    // Find empty && filled slots for choosen time
     slots.forEach(slot => {
-      if (slot.event) {
-        if (slot.start <= dateIso.start && slot.end >= dateIso.end) {
-          if (slot.swapReady) {
-            const event = db.events[slot.event.id];
-            const rooms = chooseRoom(event.dateSrc, slots, event.users, db.rooms);
-
-            if (rooms.length > 0) {
-              foundedSwaps.push({
-                event: slot.event.id,
-                room: rooms[0]
-              });
-            }
-          }
+      if (slot.start >= dateIso.start && slot.end <= dateIso.end) {
+        if (slot.event) {
+          slotsForPeriod.filled.push(slot);
+        } else {
+          slotsForPeriod.empty.push(slot);
         }
       }
     });
 
+    slotsForPeriod.filled.forEach(filledSlot => {
+      const slots = slotsForPeriod.empty;
+      const dateIso = {
+        start: moment(filledSlot.start).toISOString(),
+        end: moment(filledSlot.end).toISOString()
+      };
+      const filledSlotMembers = filledSlot.users;
+      const rooms = db.rooms;
+      const choosen = chooseRoom(dateIso, slots, filledSlotMembers, rooms);
+
+      if (choosen.length > 0) {
+        let steps = 0;
+        const floor = rooms[filledSlot.room].floor;
+        members.forEach(member => {
+          steps += Math.abs(floor - member.homeFloor);
+        });
+
+        foundedSwaps.push({
+          event: filledSlot.event.id,
+          slot: filledSlot,
+          room: choosen[0],
+          steps: steps
+        });
+      }
+    });
+
+    foundedSwaps = filterByCapacity(foundedSwaps, members, db.rooms);
+    foundedSwaps.sort(sortBySteps);
+
+    // Clean
+    foundedSwaps = foundedSwaps.map(swap => {
+      return {
+        event: swap.event,
+        room: swap.room
+      };
+    });
+
     return foundedSwaps;
+  }
+
+  // ------------------------------
+
+  function filterByCapacity (swaps, members, rooms) {
+    const filtered = swaps.filter(swap => {
+      const roomId = swap.slot.room;
+      const capacity = rooms[roomId].capacity;
+      if (capacity >= members.length) {
+        return true;
+      }
+    });
+
+    return filtered;
+  }
+
+  // ------------------------------
+
+  function checkCurrentRoom (rooms, members, defaultRoom) {
+    if (!defaultRoom || members.length === 0) {
+      return true;
+    }
+    const capacity = rooms[defaultRoom].capacity;
+    return capacity >= members.length;
   }
 
   // ------------------------------

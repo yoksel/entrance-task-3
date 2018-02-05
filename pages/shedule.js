@@ -64,18 +64,23 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
             const eventEndTime = moment(event.dateEnd);
 
             // Fill empty slot
-            const emptySlot = {
-              start: startTime,
-              end: eventStartTime,
-              event: null,
-              room: roomId,
-              items: fillItems({
+
+            if (startTime.toISOString() !== eventStartTime.toISOString()) {
+              const emptySlot = {
                 start: startTime,
                 end: eventStartTime,
+                event: null,
                 room: roomId,
-                isHasItems: isHasItems
-              })
-            };
+                roomTitle: room.title,
+                items: fillItems({
+                  start: startTime,
+                  end: eventStartTime,
+                  room: roomId,
+                  isHasItems: isHasItems
+                })
+              };
+              room.slots.push(emptySlot);
+            }
 
             // Fill event slot
             const eventSlot = {
@@ -84,6 +89,7 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
               event: event,
               users: event.users,
               room: roomId,
+              roomTitle: room.title,
               swapReady: capacity > event.users.length,
               items: fillItems({
                 start: eventStartTime,
@@ -94,7 +100,6 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
               })
             };
 
-            room.slots.push(emptySlot);
             room.slots.push(eventSlot);
 
             startTime = eventEndTime;
@@ -108,6 +113,7 @@ function getSheduleForFloor (floorsObj, day, events, isHasItems) {
             end: endTime,
             event: null,
             room: roomId,
+            roomTitle: room.title,
             items: fillItems({
               start: startTime,
               end: endTime,
@@ -297,14 +303,13 @@ function getSlotsList (events, floors) {
 
 // ------------------------------
 
-function sortByDateTime(a, b) {
+function sortByDateTime (a, b) {
   const aTime = a.dataValues.dateStart;
   const bTime = b.dataValues.dateStart;
 
   if (aTime > bTime) {
     return 1;
-  }
-  else if (aTime < bTime) {
+  } else if (aTime < bTime) {
     return -1;
   }
 
