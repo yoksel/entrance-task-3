@@ -27,8 +27,12 @@
   },
   "devDependencies": {
     "autoprefixer": "^7.2.4",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-minify": "^0.3.0",
     "consolidate": "^0.15.0",
     "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.1",
     "gulp-concat": "^2.6.1",
     "gulp-csso": "^3.0.1",
     "gulp-eslint": "^4.0.1",
@@ -56,5 +60,16 @@
     "last 2 Firefox versions",
     "last 2 Opera versions",
     "last 2 Edge versions"
-  ]
+  ],
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "modules": false
+        }
+      ],
+      "minify"
+    ]
+  }
 }

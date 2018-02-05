@@ -14,6 +14,7 @@ const sequence = require('run-sequence');
 const rimraf = require('rimraf');
 const nodemon = require('gulp-nodemon');
 const path = require('path');
+const babel = require('gulp-babel');
 
 gulp.task('clean', function (done) {
   rimraf('./public', done);
@@ -27,6 +28,7 @@ gulp.task('js', () => {
     'src/**/*.js'
   ])
     .pipe(concat('common.js'))
+    .pipe(babel())
     .pipe(gulp.dest('./public/assets/js'));
 });
 
